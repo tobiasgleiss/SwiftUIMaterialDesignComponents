@@ -1,4 +1,3 @@
-
 //
 // 📄 SwiftUIMDActivityIndicator.swift
 // 👨🏼‍💻 Author: Tobias Gleiss
@@ -6,13 +5,9 @@
 
 import SwiftUI
 
-struct SwiftUIMDActivityIndicator: View {
+public struct SwiftUIMDActivityIndicator: View {
 
     @Binding var isActive: Bool
-
-//    @Environment(\.provideTapToDismissKeyboard) private var shouldProvideTapToDismissKeyboard: Bool
-//    private var prohibitTapToDismissKeyboard: Bool
-//    private var isTapToDismissKeyboardEnabled: Bool { shouldProvideTapToDismissKeyboard && !prohibitTapToDismissKeyboard }
 
     @Environment(\.activityIndicatorColor) private var color: Color
     @Environment(\.activityIndicatorDiameter) private var diameter: CGFloat
@@ -30,13 +25,39 @@ struct SwiftUIMDActivityIndicator: View {
 
     // Animations
     let springAnimation: Animation = .spring(response: 0.9, dampingFraction: 0.9, blendDuration: 0.5)
-    let rotationAnimation: Animation = .linear(duration: 3)
+    let rotationAnimation: Animation = .linear(duration: 2)
 
-    init(isActive: Binding<Bool> = .constant(true)) {
+    ///  A Material Design Acitvity Indicator in SwiftUI
+    /// - Parameters:
+    ///   - isActive: Controls if the indicator is showing constant activity.
+    ///
+    /// If instantiated without setting `isActive`, the activity indicator will be constantly animating. If it is set false, the activity indicator will stop after the next animation loop. To control the animation and all the parameters you can use it like this:
+    ///
+    ///     struct ExampleView: View {
+    ///
+    ///         @State private var isLoading: Bool = true
+    ///
+    ///         var body: some View {
+    ///             VStack {
+    ///                 SGActivityIndicator(isAnimating: $isLoading)
+    ///                     .activityIndicatorColor(.indivMint)
+    ///                     .activityIndicatorDiameter(Size(25).scaled)
+    ///                     .activityIndicatorStrokeWidth(Size(10).scaled)
+    ///                 Button(action: buttonAction) { Text("Toggle Activity") }
+    ///             }
+    ///         }
+    ///
+    ///         private func buttonAction() {
+    ///             isLoading.toggle()
+    ///         }
+    ///
+    ///     }
+    ///
+    public init(isActive: Binding<Bool> = .constant(true)) {
         self._isActive = isActive
     }
 
-    var body: some View {
+    public var body: some View {
 
         VStack {
             Circle()
@@ -49,10 +70,16 @@ struct SwiftUIMDActivityIndicator: View {
                 .onAnimationMatchesValue(for: animatedRotation, match: 180, onMatchExecute: startExpandingAnimation)
                 .onAnimationMatchesValue(for: animatedRotation, match: 360, onMatchExecute: startReducingAnimation)
                 .onAnimationCompleted(for: animatedRotation, onCompletionExecute: restartAnimationLoop)
+                .onChange(of: isActive, perform: animationStateChanged)
         }
+    }
+    
+    private func animationStateChanged(to animated: Bool) {
+        if animated { startRotationAnimation() }
     }
 
     private func startRotationAnimation() {
+        guard isActive else { return finishAnimation() }
         var transaction = Transaction(animation: rotationAnimation)
         transaction.disablesAnimations = true
         withTransaction(transaction) { animatedRotation = 720 }
@@ -81,9 +108,15 @@ struct SwiftUIMDActivityIndicator: View {
         }
         startRotationAnimation()
     }
+    
+    private func finishAnimation() {
+        var transaction = Transaction(animation: springAnimation)
+        transaction.disablesAnimations = true
+        withTransaction(transaction) { trimEnd = 1 }
+    }
 }
 
-struct SGActivityIndicatorReplacement_Previews: PreviewProvider {
+struct SwiftUIMDActivityIndicator_Previews: PreviewProvider {
     static var previews: some View {
         SwiftUIMDActivityIndicator()
     }

@@ -8,7 +8,11 @@ private let swiftUIMDActivityIndicator = "SwiftUIMDActivityIndicator"
 let package = Package(
     name: swiftUIMDActivityIndicator,
     platforms: [
-        .iOS(.v13)
+        .iOS(.v14),
+        .macCatalyst(.v13),
+        .macOS(.v10_13),
+        .tvOS(.v11),
+        .watchOS(.v4)
     ],
     products: [
         .library(
@@ -16,8 +20,6 @@ let package = Package(
             targets: [swiftUIMDActivityIndicator]),
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: swiftUIMDActivityIndicator,
             dependencies: []),

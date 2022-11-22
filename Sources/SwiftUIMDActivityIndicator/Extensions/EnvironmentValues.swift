@@ -5,16 +5,18 @@
 
 import SwiftUI
 
+// MARK: Default style values for the SwiftUIMDActivityIndicator
+
 private struct ActivityIndicatorColor: EnvironmentKey {
-    static let defaultValue: Color = .blue
+    static let defaultValue: Color = .black
 }
 
 private struct ActivityIndicatorDiameter: EnvironmentKey {
-    static let defaultValue: CGFloat = 50
+    static let defaultValue: CGFloat = 48
 }
 
 private struct ActivityIndicatorStrokeWidth: EnvironmentKey {
-    static let defaultValue: CGFloat = 10
+    static let defaultValue: CGFloat = 5
 }
 
 extension EnvironmentValues {
