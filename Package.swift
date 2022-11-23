@@ -3,10 +3,10 @@
 
 import PackageDescription
 
-private let swiftUIMDActivityIndicator = "SwiftUIMDActivityIndicator"
+private let swiftUIMaterialDesignComponents = "SwiftUIMaterialDesignComponents"
 
 let package = Package(
-    name: swiftUIMDActivityIndicator,
+    name: swiftUIMaterialDesignComponents,
     platforms: [
         .iOS(.v14),
         .macCatalyst(.v13),
@@ -16,12 +16,12 @@ let package = Package(
     ],
     products: [
         .library(
-            name: swiftUIMDActivityIndicator,
-            targets: [swiftUIMDActivityIndicator]),
+            name: swiftUIMaterialDesignComponents,
+            targets: [swiftUIMaterialDesignComponents]),
     ],
     targets: [
         .target(
-            name: swiftUIMDActivityIndicator,
+            name: swiftUIMaterialDesignComponents,
             dependencies: []),
     ]
 )
