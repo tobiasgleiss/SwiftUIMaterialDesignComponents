@@ -5,8 +5,6 @@
 
 import SwiftUI
 
-// MARK: Default style values for the SwiftUIMDActivityIndicator
-
 private struct ActivityIndicatorColor: EnvironmentKey {
     static let defaultValue: Color = .black
 }
@@ -17,6 +15,10 @@ private struct ActivityIndicatorDiameter: EnvironmentKey {
 
 private struct ActivityIndicatorStrokeWidth: EnvironmentKey {
     static let defaultValue: CGFloat = 5
+}
+
+private struct ButtonPendingState: EnvironmentKey {
+    static let defaultValue = false
 }
 
 extension EnvironmentValues {
@@ -33,5 +35,10 @@ extension EnvironmentValues {
     var activityIndicatorStrokeWidth: CGFloat {
         get { self[ActivityIndicatorStrokeWidth.self] }
         set { self[ActivityIndicatorStrokeWidth.self] = newValue }
+    }
+    
+    var isButtonPending: Bool {
+        get { self[ButtonPendingState.self] }
+        set { self[ButtonPendingState.self] = newValue }
     }
 }
