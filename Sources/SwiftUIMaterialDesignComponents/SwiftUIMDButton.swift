@@ -165,6 +165,7 @@ public struct SwiftUIMDButton: View {
                
                 Text(buttonCaption)
                     .foregroundColor(buttonCaptionColor)
+                    .font(buttonStyle.buttonFont)
                     .fontWeight(.bold)
             }
         }
