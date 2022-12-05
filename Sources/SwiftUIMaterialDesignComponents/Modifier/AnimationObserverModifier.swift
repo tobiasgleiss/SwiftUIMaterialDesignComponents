@@ -5,9 +5,9 @@
 
 import SwiftUI
 
-struct AnimationObserverModifier<Value>: AnimatableModifier where Value: VectorArithmetic {
+public struct AnimationObserverModifier<Value>: AnimatableModifier where Value: VectorArithmetic {
 
-    var animatableData: Value {
+    public var animatableData: Value {
         didSet {
             notifyIfValueMatched()
             notifyCompletionIfFinished()
@@ -41,7 +41,7 @@ struct AnimationObserverModifier<Value>: AnimatableModifier where Value: VectorA
         }
     }
 
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         content
     }
 }
