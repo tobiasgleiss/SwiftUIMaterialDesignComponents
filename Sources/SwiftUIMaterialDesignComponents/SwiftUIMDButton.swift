@@ -116,6 +116,7 @@ public struct SwiftUIMDButton: View {
             }
             .onEnded { value in
                 isPressed = false
+                buttonWasTapped()
             }
     }
     
