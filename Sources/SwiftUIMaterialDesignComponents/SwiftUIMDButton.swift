@@ -116,7 +116,6 @@ public struct SwiftUIMDButton: View {
             }
             .onEnded { value in
                 isPressed = false
-                buttonWasTapped()
             }
     }
     
@@ -217,6 +216,9 @@ public struct SwiftUIMDButton: View {
                 buttonElevationShadowOffset = 10
                 buttonElevationShadowRadius = 5
             }
+        }
+        else if finished && !isPressed {
+            buttonWasTapped()
         }
     }
     

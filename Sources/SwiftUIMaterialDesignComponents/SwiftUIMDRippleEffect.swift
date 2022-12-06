@@ -23,7 +23,7 @@ public struct SwiftUIMDRippleEffect: View {
     let rippleEffectColor: Color
     
     // Animations
-    let rippleEffectScalingAnimation: Animation = .easeIn(duration: 0.3)
+    let rippleEffectScalingAnimation: Animation = .easeIn(duration: 0.25)
     let rippleEffectFadeOutAnimation: Animation = .easeInOut(duration: 0.2)
     
     /// A Material Design Ripple Effect in SwiftUI.
