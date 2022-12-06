@@ -20,8 +20,7 @@ public struct SwiftUIMDButton: View {
     @State var isPressed: Bool = false
     @State var showIndicator: Bool = false
     @State var tapLocation: CGPoint
-    @State var rippleEffectScaling: CGFloat
-    @State var rippleEffectOpacity: CGFloat
+    @State var rippleEffectAnimationFinished: Bool = false
     @State var buttonElevationShadowRadius: CGFloat = 0
     @State var buttonElevationShadowOffset: CGFloat = 0
     
@@ -81,8 +80,6 @@ public struct SwiftUIMDButton: View {
     ///
     public init(displays caption: String = "A button this is", style: mdButtonStyle = .contained(), customHeight: CGFloat = SwiftUIMDButton.buttonHeightDefault, customWidth: CGFloat = SwiftUIMDButton.buttonWidthDefault, leadingIcon: Image? = nil, action: @escaping () -> Void = { } ) {
         tapLocation = CGPoint(x: customHeight/2, y: customWidth/2)
-        rippleEffectScaling = rippleEffectScalingDefault
-        rippleEffectOpacity = rippleEffectOpacityDefault
         buttonCaption = caption
         buttonAction = action
         buttonStyle = style
@@ -130,6 +127,7 @@ public struct SwiftUIMDButton: View {
             .cornerRadius(buttonCornerRadius)
             .onChange(of: isPending, perform: pendingStateChanged)
             .onChange(of: isPressed, perform: pressedStateChanged)
+            .onChange(of: rippleEffectAnimationFinished, perform: animationStateChanged)
             .shadow(color: buttonElevationShadowColor, radius: buttonElevationShadowRadius, x: 0, y: buttonElevationShadowOffset)
     }
     
@@ -137,7 +135,7 @@ public struct SwiftUIMDButton: View {
         ZStack {
             buttonBackgroundShape
             
-            SwiftUIMDRippleEffect(isPressed: $isPressed, tapLocation: $tapLocation, rippleEffectColor: buttonRippleEffectColor)
+            SwiftUIMDRippleEffect(isPressed: $isPressed, tapLocation: $tapLocation, rippleEffectColor: buttonRippleEffectColor, isFinished: $rippleEffectAnimationFinished)
                 
             buttonCaptionContent
         }
@@ -165,6 +163,7 @@ public struct SwiftUIMDButton: View {
                
                 Text(buttonCaption)
                     .foregroundColor(buttonCaptionColor)
+                    .font(buttonStyle.buttonFont)
                     .fontWeight(.bold)
             }
         }
@@ -198,20 +197,29 @@ public struct SwiftUIMDButton: View {
         }
     }
     
+    private func setRippleEffectAnimationFinished() {
+        rippleEffectAnimationFinished = true
+    }
+    
     private func pressedStateChanged(to pressed: Bool) {
-        if pressed {
-            var transaction = Transaction(animation: .default)
-            transaction.disablesAnimations = true
-            withTransaction(transaction) {
-                buttonElevationShadowRadius = buttonStyle.buttonElevationShadow.radius
-                buttonElevationShadowOffset = 8
-            }
-        }
-        else {
+        if !pressed {
             buttonElevationShadowOffset = 0
             buttonElevationShadowRadius = 0
         }
-        
+    }
+    
+    private func animationStateChanged(to finished: Bool) {
+        if finished && isPressed {
+            var transaction = Transaction(animation: .default)
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                buttonElevationShadowOffset = 10
+                buttonElevationShadowRadius = 5
+            }
+        }
+        else if finished && !isPressed {
+            buttonWasTapped()
+        }
     }
     
     private func resetElevationAnimation() {
