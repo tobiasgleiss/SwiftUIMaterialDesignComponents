@@ -70,7 +70,7 @@ public enum mdButtonStyle {
     var buttonElevationShadow: (radius: CGFloat, color: Color) {
         switch self {
         case .outlined: return (radius: 0, color: .clear)
-        case .contained: return (radius: 8, color: .black.opacity(0.6))
+        case .contained: return (radius: 8, color: .black.opacity(0.4))
         case .text: return (radius: 0, color: .clear)
         }
     }
