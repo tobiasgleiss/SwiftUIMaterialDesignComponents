@@ -95,16 +95,17 @@ public struct SwiftUIMDButton: View {
     
     
     public var body: some View {
-        if #available(iOS 16.0, *) {
-            button
-                .gesture(tap)
-        } else {
-            button
-                .onTapGesture(perform: buttonWasTapped)
-        }
+        button
+            .contentShape(Rectangle())
+            .frame(width: buttonWidth)
+            .frame(height: buttonHeight)
+            .cornerRadius(buttonCornerRadius)
+            .onChange(of: isPending, perform: pendingStateChanged)
+            .onChange(of: isPressed, perform: pressedStateChanged)
+            .onChange(of: rippleEffectAnimationFinished, perform: animationStateChanged)
+            .shadow(color: buttonElevationShadowColor, radius: buttonElevationShadowRadius, x: 0, y: buttonElevationShadowOffset)
+            .gesture(tap)
     }
-    
-    
     
     private var tap: some Gesture {
         DragGesture(minimumDistance: 0)
@@ -120,18 +121,6 @@ public struct SwiftUIMDButton: View {
     }
     
     private var button: some View {
-        buttonLayers
-            .contentShape(Rectangle())
-            .frame(width: buttonWidth)
-            .frame(height: buttonHeight)
-            .cornerRadius(buttonCornerRadius)
-            .onChange(of: isPending, perform: pendingStateChanged)
-            .onChange(of: isPressed, perform: pressedStateChanged)
-            .onChange(of: rippleEffectAnimationFinished, perform: animationStateChanged)
-            .shadow(color: buttonElevationShadowColor, radius: buttonElevationShadowRadius, x: 0, y: buttonElevationShadowOffset)
-    }
-    
-    private var buttonLayers: some View {
         ZStack {
             buttonBackgroundShape
             
@@ -139,7 +128,6 @@ public struct SwiftUIMDButton: View {
                 
             buttonCaptionContent
         }
-        
     }
     
     @ViewBuilder private var buttonBackgroundShape: some View {
