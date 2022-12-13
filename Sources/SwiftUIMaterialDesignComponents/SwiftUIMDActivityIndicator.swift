@@ -67,8 +67,7 @@ public struct SwiftUIMDActivityIndicator: View {
                 .rotationEffect(Angle(degrees: rotation))
                 .rotationEffect(Angle(degrees: animatedRotation))
                 .onAppear(perform: startRotationAnimation)
-                .onAnimationMatchesValue(for: animatedRotation, match: 180, onMatchExecute: startExpandingAnimation)
-                .onAnimationMatchesValue(for: animatedRotation, match: 360, onMatchExecute: startReducingAnimation)
+                .onAnimationCompleted(for: trimEnd, onCompletionExecute: startReducingAnimation)
                 .onAnimationCompleted(for: animatedRotation, onCompletionExecute: restartAnimationLoop)
                 .onChange(of: isActive, perform: animationStateChanged)
         }
@@ -83,6 +82,7 @@ public struct SwiftUIMDActivityIndicator: View {
         var transaction = Transaction(animation: rotationAnimation)
         transaction.disablesAnimations = true
         withTransaction(transaction) { animatedRotation = 720 }
+        startExpandingAnimation()
     }
 
     private func startExpandingAnimation() {
@@ -104,7 +104,7 @@ public struct SwiftUIMDActivityIndicator: View {
             animatedRotation = 0
             trimStart = 0
             trimEnd = 0.1
-            rotation -= 50
+            rotation -= 52
         }
         startRotationAnimation()
     }
