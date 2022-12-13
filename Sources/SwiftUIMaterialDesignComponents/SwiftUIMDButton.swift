@@ -29,7 +29,7 @@ public struct SwiftUIMDButton: View {
     let rippleEffectFadeOutAnimation: Animation = .easeInOut(duration: 0.2)
     
     // Button Styling
-    let buttonStyle: mdButtonStyle
+    let buttonStyle: MDButtonStyle
     let buttonBorderWidth: CGFloat
     let buttonWidth: CGFloat
     let buttonHeight: CGFloat
@@ -78,7 +78,7 @@ public struct SwiftUIMDButton: View {
     ///
     ///     }
     ///
-    public init(displays caption: String = "A button this is", style: mdButtonStyle = .contained(), customHeight: CGFloat = SwiftUIMDButton.buttonHeightDefault, customWidth: CGFloat = SwiftUIMDButton.buttonWidthDefault, leadingIcon: Image? = nil, action: @escaping () -> Void = { } ) {
+    public init(displays caption: String = "A button this is", style: MDButtonStyle = .contained(), customHeight: CGFloat = SwiftUIMDButton.buttonHeightDefault, customWidth: CGFloat = SwiftUIMDButton.buttonWidthDefault, leadingIcon: Image? = nil, action: @escaping () -> Void = { } ) {
         tapLocation = CGPoint(x: customHeight/2, y: customWidth/2)
         buttonCaption = caption
         buttonAction = action

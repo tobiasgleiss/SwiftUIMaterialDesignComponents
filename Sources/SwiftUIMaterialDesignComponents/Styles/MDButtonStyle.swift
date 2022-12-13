@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-public enum mdButtonStyle {
+public enum MDButtonStyle {
     
     case outlined(buttonColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonDefaultColor, .mdOutlinedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonCaptionDefaultColor, .mdOutlinedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, pendingIndicatorColor: Color = .mdOutlinedButtonPendingIndicatorDefaultColor)
     case contained(buttonColor: (normal: Color, disabled: Color) = (.mdContainedButtonDefaultColor, .mdContainedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdContainedButtonCaptionDefaultColor, .mdContainedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, pendingIndicatorColor: Color = .mdContainedButtonPendingIndicatorDefaultColor)
