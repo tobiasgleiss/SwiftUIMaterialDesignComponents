@@ -70,7 +70,7 @@ public enum MDButtonStyle {
     var buttonElevationShadow: (radius: CGFloat, color: Color) {
         switch self {
         case .outlined: return (radius: 0, color: .clear)
-        case .contained: return (radius: 8, color: .black.opacity(0.4))
+        case .contained: return (radius: 8, color: .black.opacity(0.2))
         case .text: return (radius: 0, color: .clear)
         }
     }
@@ -100,7 +100,5 @@ public extension Color {
     static let mdTextButtonCaptionDefaultColor: Color = Color(#colorLiteral(red: 0.3843137255, green: 0, blue: 0.9333333333, alpha: 1))
     static let mdTextButtonCaptionDisabledDefaultColor: Color = .gray
     static let mdTextButtonPendingIndicatorDefaultColor: Color = Color(#colorLiteral(red: 0.3843137255, green: 0, blue: 0.9333333333, alpha: 1))
-    
-    
     
 }

@@ -11,8 +11,6 @@ public struct SwiftUIMDButton: View {
     @Environment(\.isEnabled) private var isEnabled: Bool
     
     // Default values
-    let rippleEffectScalingDefault: CGFloat = 0
-    let rippleEffectOpacityDefault: CGFloat = 0.2
     public static let buttonWidthDefault: CGFloat = 360
     public static let buttonHeightDefault: CGFloat = 45
     
@@ -23,6 +21,7 @@ public struct SwiftUIMDButton: View {
     @State var rippleEffectAnimationFinished: Bool = false
     @State var buttonElevationShadowRadius: CGFloat = 0
     @State var buttonElevationShadowOffset: CGFloat = 0
+    @State var buttonElevationShadowOpacity: CGFloat = 0
     
     // Animations
     let rippleEffectScalingAnimation: Animation = .easeIn(duration: 0.3)
@@ -103,7 +102,7 @@ public struct SwiftUIMDButton: View {
             .onChange(of: isPending, perform: pendingStateChanged)
             .onChange(of: isPressed, perform: pressedStateChanged)
             .onChange(of: rippleEffectAnimationFinished, perform: animationStateChanged)
-            .shadow(color: buttonElevationShadowColor, radius: buttonElevationShadowRadius, x: 0, y: buttonElevationShadowOffset)
+            .shadow(color: buttonElevationShadowColor.opacity(buttonElevationShadowOpacity), radius: buttonElevationShadowRadius, x: 0, y: buttonElevationShadowOffset)
             .gesture(tap)
     }
     
@@ -193,16 +192,18 @@ public struct SwiftUIMDButton: View {
         if !pressed {
             buttonElevationShadowOffset = 0
             buttonElevationShadowRadius = 0
+            buttonElevationShadowOpacity = 0
         }
     }
     
     private func animationStateChanged(to finished: Bool) {
-        if finished && isPressed {
+        if isPressed {
             var transaction = Transaction(animation: .default)
             transaction.disablesAnimations = true
             withTransaction(transaction) {
                 buttonElevationShadowOffset = 10
                 buttonElevationShadowRadius = 5
+                buttonElevationShadowOpacity = 1
             }
         }
         else if finished && !isPressed {
