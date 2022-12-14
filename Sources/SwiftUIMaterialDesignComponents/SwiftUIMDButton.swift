@@ -140,9 +140,11 @@ public struct SwiftUIMDButton: View {
     @ViewBuilder private var buttonCaptionContent: some View {
         if showIndicator {
             SwiftUIMDActivityIndicator()
-                .padding(.all, 12)
                 .activityIndicatorStrokeWidth(3)
                 .activityIndicatorColor(buttonPendingIndicatorColor)
+                .padding(.all, 10)
+                .scaledToFit()
+                
         } else {
             HStack {
                 buttonLeadingIcon
