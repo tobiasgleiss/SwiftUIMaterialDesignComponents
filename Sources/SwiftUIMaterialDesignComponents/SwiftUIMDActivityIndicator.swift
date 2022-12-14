@@ -20,7 +20,7 @@ public struct SwiftUIMDActivityIndicator: View {
     @State var animatedRotation: Double = 0
 
     // Animation Target Values
-    let trimStartAnimationTarget: CGFloat = 0.95
+    let trimStartAnimationTarget: CGFloat = 0.90
     let trimEndAnimationTarget: CGFloat = 0.85
 
     // Animations
