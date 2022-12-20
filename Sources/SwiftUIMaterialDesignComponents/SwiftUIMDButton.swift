@@ -216,10 +216,10 @@ public struct SwiftUIMDButton: View {
     
     private func pressedStateChanged(to pressed: Bool) {
         if pressed {
-            buttonAction()
             startButtonCaptionTapAnimation()
         }
         else {
+            buttonAction()
             buttonElevationShadowOffset = 0
             buttonElevationShadowRadius = 0
             buttonElevationShadowOpacity = 0
