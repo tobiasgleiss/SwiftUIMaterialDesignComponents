@@ -129,8 +129,7 @@ public struct SwiftUIMDButton: View {
             
             button
                 .contentShape(Rectangle())
-                .frame(minWidth: isButtonShapeRemoved ? 0 : buttonWidth)
-                .frame(minHeight: 0)
+                .modifier(ConditionalFrameModifier(isActive: !isAlignedTextButton, width: buttonWidth))
                 .frame(height: buttonHeight)
                 .cornerRadius(buttonCornerRadius)
                 .onChange(of: isPending, perform: pendingStateChanged)
