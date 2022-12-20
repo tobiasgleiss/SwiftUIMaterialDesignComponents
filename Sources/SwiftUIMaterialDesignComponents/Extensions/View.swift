@@ -34,16 +34,6 @@ extension View {
     @discardableResult public func activityIndicatorStrokeWidth(_ strokeWidth: CGFloat) -> some View {
         environment(\.activityIndicatorStrokeWidth, strokeWidth)
     }
-
-    /// Calls the completion handler whenever an animation state matches the given value..
-    /// - Parameters:
-    ///   - value: The value to observe for animations.
-    ///   - matchValue: The value the animation state should match.
-    ///   - onMatchExecute: The completion callback to call once the animation state matches the given value.
-    /// - Returns: A modified `View` instance with the observer attached.
-    public func onAnimationMatchesValue<Value: VectorArithmetic>(for value: Value, match matchValue: Value, onMatchExecute: @escaping () -> Void) -> ModifiedContent<Self, AnimationObserverModifier<Value>> {
-        modifier(AnimationObserverModifier(observedValue: value, matchValue: matchValue, onMatchExecute: onMatchExecute))
-    }
     
     /// Calls the completion handler whenever an animation on the given value completes.
     /// - Parameters:
@@ -52,5 +42,31 @@ extension View {
     /// - Returns: A modified `View` instance with the observer attached.
     public func onAnimationCompleted<Value: VectorArithmetic>(for value: Value, onCompletionExecute: @escaping () -> Void) -> ModifiedContent<Self, AnimationObserverModifier<Value>> {
         modifier(AnimationObserverModifier(observedValue: value, onCompletionExecute: onCompletionExecute))
+    }
+    
+    /// 👨🏼‍💻 Author: Benno Kress
+    /// With kind approval of Benno Kress.
+    /// https://github.com/bennokress
+    ///
+    /// Hide or show the view based on a boolean value.
+    /// - Parameters:
+    ///   - isHidden: Boolean value indicating whether or not to hide the view
+    ///   - remove: Boolean value indicating whether or not to remove the view (view must also be hidden to be removed)
+    /// - Returns: The given view shown or hidden/removed.
+    ///
+    /// Example for visibility:
+    /// ```
+    /// Text("Label")
+    ///     .hidden(true)
+    /// ```
+    ///
+    /// Example for complete removal:
+    /// ```
+    /// Text("Label")
+    ///     .hidden(true, remove: true)
+    /// ```
+    ///
+    @discardableResult internal func hidden(_ isHidden: Bool, andRemoved remove: Bool = false) -> some View {
+        modifier(HiddenModifier(isHidden: isHidden, remove: remove))
     }
 }

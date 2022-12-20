@@ -5,49 +5,70 @@
 
 import SwiftUI
 
-public enum MDButtonStyle {
+public enum MDButtonStyle: Equatable {
     
-    case outlined(buttonColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonDefaultColor, .mdOutlinedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonCaptionDefaultColor, .mdOutlinedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, pendingIndicatorColor: Color = .mdOutlinedButtonPendingIndicatorDefaultColor)
-    case contained(buttonColor: (normal: Color, disabled: Color) = (.mdContainedButtonDefaultColor, .mdContainedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdContainedButtonCaptionDefaultColor, .mdContainedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, pendingIndicatorColor: Color = .mdContainedButtonPendingIndicatorDefaultColor)
-    case text(buttonColor: (normal: Color, disabled: Color) = (.mdTextButtonDefaultColor, .mdTextButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdTextButtonCaptionDefaultColor, .mdTextButtonCaptionDisabledDefaultColor), font: Font = .subheadline, cornerRadius: CGFloat = 5, pendingIndicatorColor: Color = .mdTextButtonPendingIndicatorDefaultColor)
+    public static func == (lhs: MDButtonStyle, rhs: MDButtonStyle) -> Bool {
+        return lhs.buttonColor == rhs.buttonColor &&
+        lhs.textColor == rhs.textColor &&
+        lhs.buttonFont == rhs.buttonFont &&
+        lhs.buttonBorderWidth == rhs.buttonBorderWidth &&
+        lhs.buttonCornerRadius == rhs.buttonCornerRadius &&
+        lhs.rippleEffectColor == rhs.rippleEffectColor &&
+        lhs.pendingIndicatorColor == rhs.pendingIndicatorColor &&
+        lhs.buttonElevationShadow == rhs.buttonElevationShadow
+    }
+    
+    
+    case outlined(buttonColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonDefaultColor, .mdOutlinedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonCaptionDefaultColor, .mdOutlinedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, horizontalAlignment: HorizontalAlignment = .center, pendingIndicatorColor: Color = .mdOutlinedButtonPendingIndicatorDefaultColor)
+    case contained(buttonColor: (normal: Color, disabled: Color) = (.mdContainedButtonDefaultColor, .mdContainedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdContainedButtonCaptionDefaultColor, .mdContainedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, horizontalAlignment: HorizontalAlignment = .center, pendingIndicatorColor: Color = .mdContainedButtonPendingIndicatorDefaultColor)
+    case text(buttonColor: (normal: Color, disabled: Color) = (.mdTextButtonDefaultColor, .mdTextButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdTextButtonCaptionDefaultColor, .mdTextButtonCaptionDisabledDefaultColor), font: Font = .subheadline, cornerRadius: CGFloat = 5, horizontalAlignment: HorizontalAlignment = .center, pendingIndicatorColor: Color = .mdTextButtonPendingIndicatorDefaultColor)
     
     var buttonColor: (normal: Color, disabled: Color) {
         switch self {
-        case let .outlined(buttonColor, _, _, _, _, _): return buttonColor
-        case let .contained(buttonColor, _, _, _, _, _): return buttonColor
-        case let .text(buttonColor, _, _, _, _): return buttonColor
+        case let .outlined(buttonColor, _, _, _, _, _, _): return buttonColor
+        case let .contained(buttonColor, _, _, _, _, _, _): return buttonColor
+        case let .text(buttonColor, _, _, _, _, _): return buttonColor
         }
     }
     
     var textColor: (normal: Color, disabled: Color) {
         switch self {
-        case let .outlined(_, textColor, _, _, _, _): return textColor
-        case let .contained(_, textColor, _, _, _, _): return textColor
-        case let .text(_, textColor, _, _, _): return textColor
+        case let .outlined(_, textColor, _, _, _, _, _): return textColor
+        case let .contained(_, textColor, _, _, _, _, _): return textColor
+        case let .text(_, textColor, _, _, _, _): return textColor
         }
     }
     
     var buttonFont: Font {
         switch self {
-        case let .outlined(_, _, buttonFont, _, _, _): return buttonFont
-        case let .contained(_, _, buttonFont, _, _, _): return buttonFont
-        case let .text(_, _, buttonFont, _, _): return buttonFont
+        case let .outlined(_, _, buttonFont, _, _, _, _): return buttonFont
+        case let .contained(_, _, buttonFont, _, _, _, _): return buttonFont
+        case let .text(_, _, buttonFont, _, _, _): return buttonFont
         }
     }
     
     var buttonBorderWidth: CGFloat {
         switch self {
-        case let .outlined(_, _, _, borderWidth, _, _): return borderWidth
-        case let .contained(_, _, _, borderWidth, _, _): return borderWidth
+        case let .outlined(_, _, _, borderWidth, _, _, _): return borderWidth
+        case let .contained(_, _, _, borderWidth, _, _, _): return borderWidth
         case .text: return 0
         }
     }
     
     var buttonCornerRadius: CGFloat {
         switch self {
-        case let .outlined(_, _, _, _, cornerRadius, _): return cornerRadius
-        case let .contained(_, _, _, _, cornerRadius, _): return cornerRadius
-        case let .text(_, _, _, cornerRadius, _): return cornerRadius
+        case let .outlined(_, _, _, _, cornerRadius, _, _): return cornerRadius
+        case let .contained(_, _, _, _, cornerRadius, _, _): return cornerRadius
+        case let .text(_, _, _, cornerRadius, _, _): return cornerRadius
+        }
+    }
+    
+    var buttonAlignment: HorizontalAlignment {
+        switch self {
+        case let .outlined(_, _, _, _, _, horizontalAlignment, _): return horizontalAlignment
+        case let .contained(_, _, _, _, _, horizontalAlignment, _): return horizontalAlignment
+        case let .text(_, _, _, _, horizontalAlignment, _): return horizontalAlignment
+            
         }
     }
     
@@ -61,9 +82,9 @@ public enum MDButtonStyle {
     
     var pendingIndicatorColor: Color {
         switch self {
-        case let .outlined(_, _, _, _, _, pendingIndicatorColor): return pendingIndicatorColor
-        case let .contained(_, _, _, _, _, pendingIndicatorColor): return pendingIndicatorColor
-        case let .text(_, _, _, _, pendingIndicatorColor): return pendingIndicatorColor
+        case let .outlined(_, _, _, _, _, _, pendingIndicatorColor): return pendingIndicatorColor
+        case let .contained(_, _, _, _, _, _, pendingIndicatorColor): return pendingIndicatorColor
+        case let .text(_, _, _, _, _, pendingIndicatorColor): return pendingIndicatorColor
         }
     }
     
