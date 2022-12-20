@@ -34,16 +34,6 @@ extension View {
     @discardableResult public func activityIndicatorStrokeWidth(_ strokeWidth: CGFloat) -> some View {
         environment(\.activityIndicatorStrokeWidth, strokeWidth)
     }
-
-    /// Calls the completion handler whenever an animation state matches the given value..
-    /// - Parameters:
-    ///   - value: The value to observe for animations.
-    ///   - matchValue: The value the animation state should match.
-    ///   - onMatchExecute: The completion callback to call once the animation state matches the given value.
-    /// - Returns: A modified `View` instance with the observer attached.
-    public func onAnimationMatchesValue<Value: VectorArithmetic>(for value: Value, match matchValue: Value, onMatchExecute: @escaping () -> Void) -> ModifiedContent<Self, AnimationObserverModifier<Value>> {
-        modifier(AnimationObserverModifier(observedValue: value, matchValue: matchValue, onMatchExecute: onMatchExecute))
-    }
     
     /// Calls the completion handler whenever an animation on the given value completes.
     /// - Parameters:
