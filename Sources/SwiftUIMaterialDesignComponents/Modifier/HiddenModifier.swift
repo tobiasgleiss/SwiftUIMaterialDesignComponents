@@ -1,8 +1,6 @@
 //
 // 📄 HiddenModifier.swift
-// 👨🏼‍💻 Author: Benno Kress
-// With kind approval of Benno Kress.
-// https://github.com/bennokress
+// 👨🏼‍💻 Author: Benno Kress (https://github.com/bennokress)
 //
 
 import SwiftUI

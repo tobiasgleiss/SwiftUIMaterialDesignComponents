@@ -40,14 +40,10 @@ extension View {
     ///   - value: The value to observe for animations.
     ///   - onCompletionExecute: The completion callback to call once the animation completes.
     /// - Returns: A modified `View` instance with the observer attached.
-    public func onAnimationCompleted<Value: VectorArithmetic>(for value: Value, onCompletionExecute: @escaping () -> Void) -> ModifiedContent<Self, AnimationObserverModifier<Value>> {
+    @discardableResult internal func onAnimationCompleted<Value: VectorArithmetic>(for value: Value, onCompletionExecute: @escaping () -> Void) -> ModifiedContent<Self, AnimationObserverModifier<Value>> {
         modifier(AnimationObserverModifier(observedValue: value, onCompletionExecute: onCompletionExecute))
     }
     
-    /// 👨🏼‍💻 Author: Benno Kress
-    /// With kind approval of Benno Kress.
-    /// https://github.com/bennokress
-    ///
     /// Hide or show the view based on a boolean value.
     /// - Parameters:
     ///   - isHidden: Boolean value indicating whether or not to hide the view
@@ -65,8 +61,13 @@ extension View {
     /// Text("Label")
     ///     .hidden(true, remove: true)
     /// ```
-    ///
     @discardableResult internal func hidden(_ isHidden: Bool, andRemoved remove: Bool = false) -> some View {
         modifier(HiddenModifier(isHidden: isHidden, remove: remove))
     }
+    
+    /// Sets the frame of the view based on a condition.
+    @discardableResult internal func conditionalFrameWidth(_ width: CGFloat, if isActive: Bool) -> some View {
+        modifier(ConditionalFrameModifier(isActive: isActive, width: width))
+    }
+    
 }

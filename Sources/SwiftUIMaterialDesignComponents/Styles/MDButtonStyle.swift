@@ -5,19 +5,7 @@
 
 import SwiftUI
 
-public enum MDButtonStyle: Equatable {
-    
-    public static func == (lhs: MDButtonStyle, rhs: MDButtonStyle) -> Bool {
-        return lhs.buttonColor == rhs.buttonColor &&
-        lhs.textColor == rhs.textColor &&
-        lhs.buttonFont == rhs.buttonFont &&
-        lhs.buttonBorderWidth == rhs.buttonBorderWidth &&
-        lhs.buttonCornerRadius == rhs.buttonCornerRadius &&
-        lhs.rippleEffectColor == rhs.rippleEffectColor &&
-        lhs.pendingIndicatorColor == rhs.pendingIndicatorColor &&
-        lhs.buttonElevationShadow == rhs.buttonElevationShadow
-    }
-    
+public enum MDButtonStyle {    
     
     case outlined(buttonColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonDefaultColor, .mdOutlinedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonCaptionDefaultColor, .mdOutlinedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, horizontalAlignment: HorizontalAlignment = .center, pendingIndicatorColor: Color = .mdOutlinedButtonPendingIndicatorDefaultColor)
     case contained(buttonColor: (normal: Color, disabled: Color) = (.mdContainedButtonDefaultColor, .mdContainedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdContainedButtonCaptionDefaultColor, .mdContainedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, horizontalAlignment: HorizontalAlignment = .center, pendingIndicatorColor: Color = .mdContainedButtonPendingIndicatorDefaultColor)
@@ -96,6 +84,18 @@ public enum MDButtonStyle: Equatable {
         }
     }
     
+    
+}
+
+extension MDButtonStyle {
+    
+    var isText: Bool {
+        switch self {
+        case .text: return true
+        default:
+            return false
+        }
+    }
     
 }
 

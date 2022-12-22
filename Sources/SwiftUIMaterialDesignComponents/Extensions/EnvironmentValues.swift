@@ -22,6 +22,7 @@ private struct ButtonPendingState: EnvironmentKey {
 }
 
 extension EnvironmentValues {
+    
     var activityIndicatorColor: Color {
         get { self[ActivityIndicatorColor.self] }
         set { self[ActivityIndicatorColor.self] = newValue }
@@ -41,4 +42,5 @@ extension EnvironmentValues {
         get { self[ButtonPendingState.self] }
         set { self[ButtonPendingState.self] = newValue }
     }
+    
 }
