@@ -35,6 +35,29 @@ extension View {
         environment(\.activityIndicatorStrokeWidth, strokeWidth)
     }
     
+    /// Increases the tap area around a SwiftUIMDButton. This is especially helpful on horizontally aligned text only buttons.
+    /// - Parameters: 
+    ///   - edges: The edges to inset
+    ///   - length: The length of the inset
+    @discardableResult public func increaseButtonTapArea(_ edges: Edge.Set = .all, by length: CGFloat) -> some View {
+        let topInset = (edges == .all || edges == .vertical || edges == .top) ? length : 0
+        let leadingInset = (edges == .all || edges == .horizontal || edges == .leading) ? length : 0
+        let bottomInset = (edges == .all || edges == .vertical || edges == .bottom) ? length : 0
+        let trailingInset = (edges == .all || edges == .horizontal || edges == .trailing) ? length : 0
+        return increaseButtonTapArea(top: topInset, leading: leadingInset, bottom: bottomInset, trailing: trailingInset)
+    }
+    
+    /// Increases the tap area around a SwiftUIMDButton. This is especially helpful on horizontally aligned text only buttons.
+    /// - Parameters: 
+    ///   - top: The top inset
+    ///   - leading: The leading inset
+    ///   - bottom: The bottom inset
+    ///   - trailing: The trailing inset   
+    @discardableResult public func increaseButtonTapArea(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) -> some View {
+        let tapAreaInsets = EdgeInsets(top: top, leading: leading, bottom: bottom, trailing: trailing)
+        return environment(\.buttonTapAreaInsets, tapAreaInsets)
+    }
+    
     /// Calls the completion handler whenever an animation on the given value completes.
     /// - Parameters:
     ///   - value: The value to observe for animations.
@@ -68,6 +91,13 @@ extension View {
     /// Sets the frame of the view based on a condition.
     @discardableResult internal func conditionalFrameWidth(_ width: CGFloat, if isActive: Bool) -> some View {
         modifier(ConditionalFrameModifier(isActive: isActive, width: width))
+    }
+    
+    /// Increases the Tap Area of the View by the given insets.
+    @discardableResult internal func increaseTapArea(_ tapAreaInsets: EdgeInsets) -> some View {
+        self
+            .padding(tapAreaInsets)
+            .contentShape(Rectangle())
     }
     
 }

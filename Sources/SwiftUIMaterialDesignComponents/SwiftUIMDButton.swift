@@ -9,6 +9,7 @@ public struct SwiftUIMDButton: View {
     
     @Environment(\.isButtonPending) private var isPending: Bool
     @Environment(\.isEnabled) private var isEnabled: Bool
+    @Environment(\.buttonTapAreaInsets) private var tapAreaInsets: EdgeInsets
     
     // Default values
     public static let defaultWidth: CGFloat = 300
@@ -135,6 +136,7 @@ public struct SwiftUIMDButton: View {
                 .onChange(of: rippleEffectAnimationFinished, perform: animationStateChanged)
                 .onAnimationCompleted(for: titleOpacity, onCompletionExecute: resetButtonTitleAnimation)
                 .shadow(color: elevationShadowColor.opacity(elevationShadowOpacity), radius: elevationShadowRadius, x: 0, y: elevationShadowOffset)
+                .increaseTapArea(tapAreaInsets)
                 .gesture(tap)
             
             Spacer()

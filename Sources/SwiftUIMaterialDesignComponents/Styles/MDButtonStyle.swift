@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-public enum MDButtonStyle {    
+public enum MDButtonStyle: Equatable {    
     
     case outlined(buttonColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonDefaultColor, .mdOutlinedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdOutlinedButtonCaptionDefaultColor, .mdOutlinedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, horizontalAlignment: HorizontalAlignment = .center, pendingIndicatorColor: Color = .mdOutlinedButtonPendingIndicatorDefaultColor)
     case contained(buttonColor: (normal: Color, disabled: Color) = (.mdContainedButtonDefaultColor, .mdContainedButtonDisabledDefaultColor), textColor: (normal: Color, disabled: Color) = (.mdContainedButtonCaptionDefaultColor, .mdContainedButtonCaptionDisabledDefaultColor), font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5, horizontalAlignment: HorizontalAlignment = .center, pendingIndicatorColor: Color = .mdContainedButtonPendingIndicatorDefaultColor)
@@ -83,7 +83,17 @@ public enum MDButtonStyle {
         case .text: return (radius: 0, color: .clear)
         }
     }
-    
+        
+    public static func == (lhs: MDButtonStyle, rhs: MDButtonStyle) -> Bool {
+        return lhs.buttonColor == rhs.buttonColor &&
+        lhs.textColor == rhs.textColor &&
+        lhs.buttonFont == rhs.buttonFont &&
+        lhs.buttonBorderWidth == rhs.buttonBorderWidth &&
+        lhs.buttonCornerRadius == rhs.buttonCornerRadius &&
+        lhs.rippleEffectColor == rhs.rippleEffectColor &&
+        lhs.pendingIndicatorColor == rhs.pendingIndicatorColor &&
+        lhs.buttonElevationShadow == rhs.buttonElevationShadow
+    }
     
 }
 

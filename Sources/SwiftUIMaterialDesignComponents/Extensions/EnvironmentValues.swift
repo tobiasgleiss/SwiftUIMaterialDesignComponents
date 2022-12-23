@@ -21,6 +21,10 @@ private struct ButtonPendingState: EnvironmentKey {
     static let defaultValue = false
 }
 
+private struct ButtonTapAreaInsets: EnvironmentKey {
+    static let defaultValue = EdgeInsets.zero
+}
+
 extension EnvironmentValues {
     
     var activityIndicatorColor: Color {
@@ -42,5 +46,16 @@ extension EnvironmentValues {
         get { self[ButtonPendingState.self] }
         set { self[ButtonPendingState.self] = newValue }
     }
+    
+    var buttonTapAreaInsets: EdgeInsets {
+        get { self[ButtonTapAreaInsets.self] }
+        set { self[ButtonTapAreaInsets.self] = newValue }
+    }
+    
+}
+
+extension EdgeInsets {
+    
+    static let zero = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
     
 }
