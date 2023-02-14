@@ -203,7 +203,9 @@ public struct SwiftUIMDButton: View {
                 showIndicator = true
             }
         } else {
-            showIndicator = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                showIndicator = false
+            }
         }
     }
     
