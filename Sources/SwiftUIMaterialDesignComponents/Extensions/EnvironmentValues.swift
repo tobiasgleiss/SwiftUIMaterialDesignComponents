@@ -10,11 +10,11 @@ private struct ActivityIndicatorColor: EnvironmentKey {
 }
 
 private struct ActivityIndicatorDiameter: EnvironmentKey {
-    static let defaultValue: CGFloat = 48
+    static let defaultValue: CGFloat = 26
 }
 
 private struct ActivityIndicatorStrokeWidth: EnvironmentKey {
-    static let defaultValue: CGFloat = 5
+    static let defaultValue: CGFloat = 3
 }
 
 private struct ButtonPendingState: EnvironmentKey {
