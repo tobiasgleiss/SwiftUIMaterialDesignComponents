@@ -7,17 +7,17 @@ import SwiftUI
 
 public struct SwiftUIMDActivityIndicator: View {
 
-    @Binding var isActive: Bool
-
     @Environment(\.activityIndicatorColor) private var color: Color
     @Environment(\.activityIndicatorDiameter) private var diameter: CGFloat
     @Environment(\.activityIndicatorStrokeWidth) private var strokeWidth: CGFloat
+    
+    @Binding private var isActive: Bool
 
     // Animation States
-    @State var trimStart: CGFloat = 0.0
-    @State var trimEnd: CGFloat = 0.1
-    @State var rotation: Double = 0
-    @State var animatedRotation: Double = 0
+    @State private var trimStart: CGFloat = 0.0
+    @State private var trimEnd: CGFloat = 0.1
+    @State private var rotation: Double = 0
+    @State private var animatedRotation: Double = 0
 
     // Animation Target Values
     let trimStartAnimationTarget: CGFloat = 0.90
@@ -58,19 +58,16 @@ public struct SwiftUIMDActivityIndicator: View {
     }
 
     public var body: some View {
-
-        VStack {
-            Circle()
-                .trim(from: trimStart, to: trimEnd)
-                .stroke(color, style: StrokeStyle(lineWidth: strokeWidth, lineCap: .square))
-                .frame(maxWidth: diameter)
-                .rotationEffect(Angle(degrees: rotation))
-                .rotationEffect(Angle(degrees: animatedRotation))
-                .onAppear(perform: startRotationAnimation)
-                .onAnimationCompleted(for: trimEnd, onCompletionExecute: startReducingAnimation)
-                .onAnimationCompleted(for: animatedRotation, onCompletionExecute: restartAnimationLoop)
-                .onChange(of: isActive, perform: animationStateChanged)
-        }
+        Circle()
+            .trim(from: trimStart, to: trimEnd)
+            .stroke(color, style: StrokeStyle(lineWidth: strokeWidth, lineCap: .square))
+            .frame(width: diameter, height: diameter)
+            .rotationEffect(Angle(degrees: rotation))
+            .rotationEffect(Angle(degrees: animatedRotation))
+            .onAppear(perform: startRotationAnimation)
+            .onAnimationCompleted(for: trimEnd, onCompletionExecute: startReducingAnimation)
+            .onAnimationCompleted(for: animatedRotation, onCompletionExecute: restartAnimationLoop)
+            .onChange(of: isActive, perform: animationStateChanged)
     }
     
     private func animationStateChanged(to animated: Bool) {
@@ -114,10 +111,13 @@ public struct SwiftUIMDActivityIndicator: View {
         transaction.disablesAnimations = true
         withTransaction(transaction) { trimEnd = 1 }
     }
+    
 }
 
 struct SwiftUIMDActivityIndicator_Previews: PreviewProvider {
+    
     static var previews: some View {
         SwiftUIMDActivityIndicator()
     }
+    
 }

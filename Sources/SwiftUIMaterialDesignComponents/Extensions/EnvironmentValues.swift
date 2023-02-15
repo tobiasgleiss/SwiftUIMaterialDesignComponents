@@ -10,18 +10,23 @@ private struct ActivityIndicatorColor: EnvironmentKey {
 }
 
 private struct ActivityIndicatorDiameter: EnvironmentKey {
-    static let defaultValue: CGFloat = 48
+    static let defaultValue: CGFloat = 26
 }
 
 private struct ActivityIndicatorStrokeWidth: EnvironmentKey {
-    static let defaultValue: CGFloat = 5
+    static let defaultValue: CGFloat = 3
 }
 
 private struct ButtonPendingState: EnvironmentKey {
     static let defaultValue = false
 }
 
+private struct ButtonTapAreaInsets: EnvironmentKey {
+    static let defaultValue = EdgeInsets.zero
+}
+
 extension EnvironmentValues {
+    
     var activityIndicatorColor: Color {
         get { self[ActivityIndicatorColor.self] }
         set { self[ActivityIndicatorColor.self] = newValue }
@@ -41,4 +46,16 @@ extension EnvironmentValues {
         get { self[ButtonPendingState.self] }
         set { self[ButtonPendingState.self] = newValue }
     }
+    
+    var buttonTapAreaInsets: EdgeInsets {
+        get { self[ButtonTapAreaInsets.self] }
+        set { self[ButtonTapAreaInsets.self] = newValue }
+    }
+    
+}
+
+extension EdgeInsets {
+    
+    static let zero = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+    
 }

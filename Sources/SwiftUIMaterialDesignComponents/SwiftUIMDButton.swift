@@ -9,62 +9,63 @@ public struct SwiftUIMDButton: View {
     
     @Environment(\.isButtonPending) private var isPending: Bool
     @Environment(\.isEnabled) private var isEnabled: Bool
+    @Environment(\.buttonTapAreaInsets) private var tapAreaInsets: EdgeInsets
     
     // Default values
-    public static let buttonWidthDefault: CGFloat = 300
-    public static let buttonHeightDefault: CGFloat = 45
+    public static let defaultWidth: CGFloat = 300
+    public static let defaultHeight: CGFloat = 45
     
     // View States
-    @State var isPressed: Bool = false
-    let isRippleEffectDisabled: Bool
-    @State var showIndicator: Bool = false
-    @State var tapLocation: CGPoint
-    @State var rippleEffectAnimationFinished: Bool = false
-    @State var buttonElevationShadowRadius: CGFloat = 0
-    @State var buttonElevationShadowOffset: CGFloat = 0
-    @State var buttonElevationShadowOpacity: CGFloat = 0
-    @State var buttonCaptionOpacity: CGFloat = 1
+    @State private var isPressed: Bool = false
+    @State private var showIndicator: Bool = false
+    @State private var tapLocation: CGPoint
+    @State private var rippleEffectAnimationFinished: Bool = false
+    @State private var elevationShadowRadius: CGFloat = 0
+    @State private var elevationShadowOffset: CGFloat = 0
+    @State private var elevationShadowOpacity: CGFloat = 0
+    @State private var titleOpacity: CGFloat = 1
+    @State private var isLastTapLocationValid: Bool = false
     
     // Animations
     let rippleEffectScalingAnimation: Animation = .easeIn(duration: 0.3)
     let rippleEffectFadeOutAnimation: Animation = .easeInOut(duration: 0.2)
-    let buttonCaptionOpacityAnimation: Animation = .easeIn(duration: 0.15)
+    let titleOpacityAnimation: Animation = .easeIn(duration: 0.15)
     
     // Button Styling
-    let buttonStyle: MDButtonStyle
-    let buttonBorderWidth: CGFloat
-    let buttonWidth: CGFloat
-    let buttonHeight: CGFloat
-    let buttonCornerRadius: CGFloat
-    let buttonHorizontalAlignment: HorizontalAlignment
-    let buttonRippleEffectColor: Color
-    let buttonPendingIndicatorColor: Color
-    let buttonElevationShadowColor: Color
-    let buttonLeadingIcon: Image?
+    let style: MDButtonStyle
+    let borderWidth: CGFloat
+    let width: CGFloat
+    let height: CGFloat
+    let cornerRadius: CGFloat
+    let horizontalAlignment: HorizontalAlignment
+    let rippleEffectColor: Color
+    let pendingIndicatorColor: Color
+    let elevationShadowColor: Color
+    let leadingIcon: Image?
+    let isRippleEffectDisabled: Bool
     
     // Computed Properties
-    var buttonColor: Color { isEnabled ? buttonStyle.buttonColor.normal : buttonStyle.buttonColor.disabled }
-    var buttonCaptionColor: Color { isEnabled ? buttonStyle.textColor.normal : buttonStyle.textColor.disabled }
-    var isAlignedTextButton: Bool { buttonStyle == .text() && (buttonStyle.buttonAlignment == .leading || buttonStyle.buttonAlignment == .trailing)}
+    var backgroundColor: Color { isEnabled ? style.buttonColor.normal : style.buttonColor.disabled }
+    var titleColor: Color { isEnabled ? style.textColor.normal : style.textColor.disabled }
+    var isAlignedTextButton: Bool { style.isText && style.buttonAlignment != .center }
     var isButtonShapeRemoved: Bool { isRippleEffectDisabled || isAlignedTextButton}
+    var dragArea: CGRect { CGRect(x: 0, y: 0, width: width, height: height) }
     
     // Button Content
-    let buttonCaption: String
+    let title: String
     
     // Button Action
-    let buttonAction: () -> Void
+    let action: () -> Void
     
     /// A Material Design button in SwiftUI
     /// - Parameters:
-    ///   - caption: The text appearing on the button
+    ///   - title: The text appearing on the button
     ///   - style: The button style (see MDButtonStyle for options).
     ///   - customHeight: The height of the button.
     ///   - customWidth: The width of the button.
     ///   - leadingIcon: The image which is displayed as a leading icon.
     ///   - disableRippleEffect: If the RippleEffect should be disabled.
     ///   - action: The action that is executed when the user taps the button.
-    ///
-    /// ⚠️ If the MDButtonStyle is set to `.text` and it´s property `horizontalAlignment` is set to `.leading` or `.trailing` the RippleEffect will automatically be disabled as well as the button shape. Only a centered text button has the ability to have a RippleEffect. 
     ///
     /// If the button is followed by a `pending`, it will be overlayed with an Activity Indicator replacing the title for as long as it is in pending state. A typical use case would look like this:
     ///
@@ -86,26 +87,26 @@ public struct SwiftUIMDButton: View {
     ///
     ///     }
     ///
-    public init(displays caption: String = "A button this is", style: MDButtonStyle = .contained(), customHeight: CGFloat = SwiftUIMDButton.buttonHeightDefault, customWidth: CGFloat = SwiftUIMDButton.buttonWidthDefault, leadingIcon: Image? = nil, disableRippleEffect: Bool = false, action: @escaping () -> Void = { } ) {
-        tapLocation = CGPoint(x: customHeight/2, y: customWidth/2)
-        buttonCaption = caption
-        buttonAction = action
-        buttonStyle = style
-        buttonWidth = customWidth
-        buttonHeight = customHeight
-        buttonCornerRadius = style.buttonCornerRadius
-        buttonHorizontalAlignment = style.buttonAlignment
-        buttonBorderWidth = style.buttonBorderWidth
-        buttonRippleEffectColor = style.rippleEffectColor.whileActive
-        buttonPendingIndicatorColor = style.pendingIndicatorColor
-        buttonElevationShadowColor = style.buttonElevationShadow.color
-        buttonLeadingIcon = leadingIcon
-        isRippleEffectDisabled = disableRippleEffect
+    /// - Attention: If the MDButtonStyle is set to `.text` and it´s property `horizontalAlignment` is set to `.leading` or `.trailing` the RippleEffect will automatically be disabled as well as the button shape. Only a centered text button has the ability to have a RippleEffect. 
+    public init(title: String, style: MDButtonStyle = .contained(), width: CGFloat = SwiftUIMDButton.defaultWidth, height: CGFloat = SwiftUIMDButton.defaultHeight, leadingIcon: Image? = nil, disableRippleEffect: Bool = false, action: @escaping () -> Void = { }) {
+        self.tapLocation = CGPoint(x: height / 2, y: width / 2)
+        self.title = title
+        self.action = action
+        self.style = style
+        self.width = width
+        self.height = height
+        self.cornerRadius = style.buttonCornerRadius
+        self.horizontalAlignment = style.buttonAlignment
+        self.borderWidth = style.buttonBorderWidth
+        self.rippleEffectColor = style.rippleEffectColor.whileActive
+        self.pendingIndicatorColor = style.pendingIndicatorColor
+        self.elevationShadowColor = style.buttonElevationShadow.color
+        self.leadingIcon = leadingIcon
+        self.isRippleEffectDisabled = disableRippleEffect
     }
     
-    
     public var body: some View {
-        buttonWrapper
+        alignedButton
             .frame(maxWidth: .infinity)
     }
     
@@ -119,28 +120,30 @@ public struct SwiftUIMDButton: View {
             }
             .onEnded { value in
                 isPressed = false
+                isLastTapLocationValid = dragArea.contains(value.location)
             }
     }
     
-    private var buttonWrapper: some View {
+    private var alignedButton: some View {
         HStack {
             Spacer()
-                .hidden(buttonHorizontalAlignment == .leading, andRemoved: true)
+                .hidden(horizontalAlignment == .leading, andRemoved: true)
             
             button
                 .contentShape(Rectangle())
-                .modifier(ConditionalFrameModifier(isActive: !isAlignedTextButton, width: buttonWidth))
-                .frame(height: buttonHeight)
-                .cornerRadius(buttonCornerRadius)
+                .conditionalFrameWidth(width, if: !isAlignedTextButton)
+                .frame(height: height)
+                .cornerRadius(cornerRadius)
                 .onChange(of: isPending, perform: pendingStateChanged)
                 .onChange(of: isPressed, perform: pressedStateChanged)
                 .onChange(of: rippleEffectAnimationFinished, perform: animationStateChanged)
-                .onAnimationCompleted(for: buttonCaptionOpacity, onCompletionExecute: resetButtonCaptionAnimation)
-                .shadow(color: buttonElevationShadowColor.opacity(buttonElevationShadowOpacity), radius: buttonElevationShadowRadius, x: 0, y: buttonElevationShadowOffset)
+                .onAnimationCompleted(for: titleOpacity, onCompletionExecute: resetButtonTitleAnimation)
+                .shadow(color: elevationShadowColor.opacity(elevationShadowOpacity), radius: elevationShadowRadius, x: 0, y: elevationShadowOffset)
+                .increaseTapArea(tapAreaInsets)
                 .gesture(tap)
             
             Spacer()
-                .hidden(buttonHorizontalAlignment == .trailing, andRemoved: true)
+                .hidden(horizontalAlignment == .trailing, andRemoved: true)
         }
     }
     
@@ -148,51 +151,47 @@ public struct SwiftUIMDButton: View {
         ZStack {
             buttonBackgroundShape
             
-            SwiftUIMDRippleEffect(isPressed: $isPressed, tapLocation: $tapLocation, rippleEffectColor: buttonRippleEffectColor, isFinished: $rippleEffectAnimationFinished)
+            SwiftUIMDRippleEffect(isPressed: $isPressed, tapLocation: $tapLocation, rippleEffectColor: rippleEffectColor, isFinished: $rippleEffectAnimationFinished)
                 .hidden(isButtonShapeRemoved, andRemoved: true)
                 
-            buttonCaptionContent
+            buttonTitleContent
         }
     }
     
     @ViewBuilder private var buttonBackgroundShape: some View {
-        switch buttonStyle {
+        switch style {
         case .contained: containedButtonBackground
         case .outlined: outlinedButtonBackground
         case .text: EmptyView()
         }
     }
     
-    @ViewBuilder private var buttonCaptionContent: some View {
+    @ViewBuilder private var buttonTitleContent: some View {
         if showIndicator {
             SwiftUIMDActivityIndicator()
-                .activityIndicatorStrokeWidth(3)
-                .activityIndicatorColor(buttonPendingIndicatorColor)
-                .padding(.all, 10)
-                .scaledToFit()
-                
+                .activityIndicatorColor(pendingIndicatorColor)
         } else {
             HStack {
-                buttonLeadingIcon
-                    .foregroundColor(buttonCaptionColor)
+                leadingIcon
+                    .foregroundColor(titleColor)
                
-                Text(buttonCaption)
-                    .foregroundColor(buttonCaptionColor)
-                    .font(buttonStyle.buttonFont)
+                Text(title)
+                    .foregroundColor(titleColor)
+                    .font(style.buttonFont)
                     .fontWeight(.bold)
-                    .opacity(buttonCaptionOpacity)
+                    .opacity(titleOpacity)
             }
         }
     }
     
     private var containedButtonBackground: some View {
-        RoundedRectangle(cornerRadius: buttonCornerRadius)
-            .foregroundColor(buttonColor)
+        RoundedRectangle(cornerRadius: cornerRadius)
+            .foregroundColor(backgroundColor)
     }
     
     private var outlinedButtonBackground: some View {
-        RoundedRectangle(cornerRadius: buttonCornerRadius, style: .continuous)
-            .stroke(buttonColor, lineWidth: buttonBorderWidth)
+        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            .stroke(backgroundColor, lineWidth: borderWidth)
     }
     
     private var textButtonBackground: some View {
@@ -205,7 +204,9 @@ public struct SwiftUIMDButton: View {
                 showIndicator = true
             }
         } else {
-            showIndicator = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                showIndicator = false
+            }
         }
     }
     
@@ -215,22 +216,23 @@ public struct SwiftUIMDButton: View {
     
     private func pressedStateChanged(to pressed: Bool) {
         if pressed {
-            startButtonCaptionTapAnimation()
+            startButtonTitleTapAnimation()
+        }
+        else if isLastTapLocationValid {
+            action()
+            resetElevationAnimation()
         }
         else {
-            buttonAction()
-            buttonElevationShadowOffset = 0
-            buttonElevationShadowRadius = 0
-            buttonElevationShadowOpacity = 0
+            resetElevationAnimation()
         }
     }
     
-    private func startButtonCaptionTapAnimation() {
+    private func startButtonTitleTapAnimation() {
         if isButtonShapeRemoved {
-            var transaction = Transaction(animation: buttonCaptionOpacityAnimation)
+            var transaction = Transaction(animation: titleOpacityAnimation)
             transaction.disablesAnimations = true
             withTransaction(transaction) {
-                buttonCaptionOpacity = 0.6
+                titleOpacity = 0.6
             }
         }
     }
@@ -240,24 +242,25 @@ public struct SwiftUIMDButton: View {
             var transaction = Transaction(animation: .default)
             transaction.disablesAnimations = true
             withTransaction(transaction) {
-                buttonElevationShadowOffset = 10
-                buttonElevationShadowRadius = 5
-                buttonElevationShadowOpacity = 1
+                elevationShadowOffset = 10
+                elevationShadowRadius = 5
+                elevationShadowOpacity = 1
             }
         }
     }
     
     private func resetElevationAnimation() {
-        buttonElevationShadowRadius = 0
-        buttonElevationShadowOffset = 0
+        elevationShadowOffset = 0
+        elevationShadowRadius = 0
+        elevationShadowOpacity = 0
     }
     
-    private func resetButtonCaptionAnimation() {
-        var transaction = Transaction(animation: buttonCaptionOpacityAnimation)
+    private func resetButtonTitleAnimation() {
+        var transaction = Transaction(animation: titleOpacityAnimation)
         transaction.disablesAnimations = true
         withTransaction(transaction) {
-            buttonCaptionOpacity = 1
+            titleOpacity = 1
         }
     }
+    
 }
-

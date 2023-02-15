@@ -8,23 +8,23 @@ import SwiftUI
 public struct SwiftUIMDRippleEffect: View {
     
     // Default values
-    let rippleEffectScalingDefault: CGFloat = 3
-    let rippleEffectOpacityDefault: CGFloat = 0
+    let defaultScaling: CGFloat = 3
+    let defaultOpacity: CGFloat = 0
     
     // View States
-    @Binding var isPressed: Bool
-    @Binding var tapLocation: CGPoint
-    @State var rippleEffectScaling: CGFloat
-    @State var rippleEffectOpacity: CGFloat
-    @State var animationCompleted: Bool = true
-    @Binding var animationCompletedCallback: Bool
+    @Binding private var isPressed: Bool
+    @Binding private var tapLocation: CGPoint
+    @Binding private var animationCompletedCallback: Bool
+    @State private var scaling: CGFloat
+    @State private var opacity: CGFloat
+    @State private var animationCompleted: Bool = true
     
-    // Colors
-    let rippleEffectColor: Color
+    // Properties
+    let color: Color
     
     // Animations
-    let rippleEffectScalingAnimation: Animation = .easeIn(duration: 0.25)
-    let rippleEffectFadeOutAnimation: Animation = .easeInOut(duration: 0.2)
+    let scalingAnimation: Animation = .easeIn(duration: 0.25)
+    let fadeOutAnimation: Animation = .easeInOut(duration: 0.2)
     
     /// A Material Design Ripple Effect in SwiftUI.
     /// - Parameters:
@@ -36,55 +36,57 @@ public struct SwiftUIMDRippleEffect: View {
     public init(isPressed: Binding<Bool>, tapLocation: Binding<CGPoint>, rippleEffectColor: Color, isFinished: Binding<Bool> = .constant(true)) {
         self._isPressed = isPressed
         self._tapLocation = tapLocation
-        self.rippleEffectScaling = rippleEffectScalingDefault
-        self.rippleEffectOpacity = rippleEffectOpacityDefault
-        self.rippleEffectColor = rippleEffectColor
+        self.scaling = defaultScaling
+        self.opacity = defaultOpacity
+        self.color = rippleEffectColor
         self._animationCompletedCallback = isFinished
     }
     
     public var body: some View {
         Circle()
-            .scale(rippleEffectScaling)
+            .scale(scaling)
             .position(x: tapLocation.x, y: tapLocation.y)
-            .foregroundColor(rippleEffectColor)
-            .opacity(rippleEffectOpacity)
+            .foregroundColor(color)
+            .opacity(opacity)
             .clipped()
             .onChange(of: isPressed, perform: pressedStateChanged)
-            .onAnimationCompleted(for: rippleEffectOpacity, onCompletionExecute: markAnimationCompleted)
+            .onAnimationCompleted(for: opacity, onCompletionExecute: markAnimationCompleted)
     }
     
-    private func pressedStateChanged(to pressedState: Bool) {
-        switch pressedState {
-        case true: startRippleEffectScalingAnimation()
-        case false: releaseRippleEffectAnimation()
+    private func pressedStateChanged(to isPressed: Bool) {
+        if isPressed {
+            startRippleEffectScalingAnimation()
+        } else {
+            finishRippleEffectAnimation()
         }
     }
     
     private func startRippleEffectScalingAnimation() {
         animationCompleted = false
         animationCompletedCallback = false
-        var transaction = Transaction(animation: rippleEffectScalingAnimation)
+        var transaction = Transaction(animation: scalingAnimation)
         transaction.disablesAnimations = true
-        rippleEffectOpacity = 0.2
+        opacity = 0.2
         withTransaction(transaction) {
-            rippleEffectOpacity = 0.3
-            rippleEffectScaling = 30
+            opacity = 0.3
+            scaling = 30
         }
     }
     
-    private func releaseRippleEffectAnimation() {
+    private func finishRippleEffectAnimation() {
         guard animationCompleted else { return }
-        var transaction = Transaction(animation: rippleEffectScalingAnimation)
+        var transaction = Transaction(animation: scalingAnimation)
         transaction.disablesAnimations = true
         withTransaction(transaction) {
-            rippleEffectOpacity = rippleEffectOpacityDefault
-            rippleEffectScaling = rippleEffectScalingDefault
+            opacity = defaultOpacity
+            scaling = defaultScaling
         }
     }
     
     private func markAnimationCompleted() {
         animationCompleted = true
         animationCompletedCallback = true
-        if !isPressed { releaseRippleEffectAnimation() }
+        if !isPressed { finishRippleEffectAnimation() }
     }
+    
 }

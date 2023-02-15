@@ -44,10 +44,5 @@ public struct AnimationObserverModifier<Value>: AnimatableModifier where Value: 
     public func body(content: Content) -> some View {
         content
     }
-}
-
-extension View {
-
     
 }
-

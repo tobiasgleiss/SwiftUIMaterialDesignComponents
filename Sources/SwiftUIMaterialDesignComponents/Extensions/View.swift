@@ -35,19 +35,38 @@ extension View {
         environment(\.activityIndicatorStrokeWidth, strokeWidth)
     }
     
+    /// Increases the tap area around a SwiftUIMDButton. This is especially helpful on horizontally aligned text only buttons.
+    /// - Parameters: 
+    ///   - edges: The edges to inset
+    ///   - length: The length of the inset
+    @discardableResult public func increaseButtonTapArea(_ edges: Edge.Set = .all, by length: CGFloat) -> some View {
+        let topInset = (edges == .all || edges == .vertical || edges == .top) ? length : 0
+        let leadingInset = (edges == .all || edges == .horizontal || edges == .leading) ? length : 0
+        let bottomInset = (edges == .all || edges == .vertical || edges == .bottom) ? length : 0
+        let trailingInset = (edges == .all || edges == .horizontal || edges == .trailing) ? length : 0
+        return increaseButtonTapArea(top: topInset, leading: leadingInset, bottom: bottomInset, trailing: trailingInset)
+    }
+    
+    /// Increases the tap area around a SwiftUIMDButton. This is especially helpful on horizontally aligned text only buttons.
+    /// - Parameters: 
+    ///   - top: The top inset
+    ///   - leading: The leading inset
+    ///   - bottom: The bottom inset
+    ///   - trailing: The trailing inset   
+    @discardableResult public func increaseButtonTapArea(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) -> some View {
+        let tapAreaInsets = EdgeInsets(top: top, leading: leading, bottom: bottom, trailing: trailing)
+        return environment(\.buttonTapAreaInsets, tapAreaInsets)
+    }
+    
     /// Calls the completion handler whenever an animation on the given value completes.
     /// - Parameters:
     ///   - value: The value to observe for animations.
     ///   - onCompletionExecute: The completion callback to call once the animation completes.
     /// - Returns: A modified `View` instance with the observer attached.
-    public func onAnimationCompleted<Value: VectorArithmetic>(for value: Value, onCompletionExecute: @escaping () -> Void) -> ModifiedContent<Self, AnimationObserverModifier<Value>> {
+    @discardableResult internal func onAnimationCompleted<Value: VectorArithmetic>(for value: Value, onCompletionExecute: @escaping () -> Void) -> ModifiedContent<Self, AnimationObserverModifier<Value>> {
         modifier(AnimationObserverModifier(observedValue: value, onCompletionExecute: onCompletionExecute))
     }
     
-    /// 👨🏼‍💻 Author: Benno Kress
-    /// With kind approval of Benno Kress.
-    /// https://github.com/bennokress
-    ///
     /// Hide or show the view based on a boolean value.
     /// - Parameters:
     ///   - isHidden: Boolean value indicating whether or not to hide the view
@@ -65,8 +84,20 @@ extension View {
     /// Text("Label")
     ///     .hidden(true, remove: true)
     /// ```
-    ///
     @discardableResult internal func hidden(_ isHidden: Bool, andRemoved remove: Bool = false) -> some View {
         modifier(HiddenModifier(isHidden: isHidden, remove: remove))
     }
+    
+    /// Sets the frame of the view based on a condition.
+    @discardableResult internal func conditionalFrameWidth(_ width: CGFloat, if isActive: Bool) -> some View {
+        modifier(ConditionalFrameModifier(isActive: isActive, width: width))
+    }
+    
+    /// Increases the Tap Area of the View by the given insets.
+    @discardableResult internal func increaseTapArea(_ tapAreaInsets: EdgeInsets) -> some View {
+        self
+            .padding(tapAreaInsets)
+            .contentShape(Rectangle())
+    }
+    
 }

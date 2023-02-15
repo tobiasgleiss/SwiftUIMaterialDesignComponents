@@ -6,6 +6,7 @@
 import SwiftUI
 
 internal struct ConditionalFrameModifier: ViewModifier {
+    
     var isActive: Bool
     var width: CGFloat
     
@@ -17,4 +18,5 @@ internal struct ConditionalFrameModifier: ViewModifier {
             content
         }
     }
+    
 }
