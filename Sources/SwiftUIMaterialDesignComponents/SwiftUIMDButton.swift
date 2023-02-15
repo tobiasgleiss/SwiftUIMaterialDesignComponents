@@ -24,6 +24,7 @@ public struct SwiftUIMDButton: View {
     @State private var elevationShadowOffset: CGFloat = 0
     @State private var elevationShadowOpacity: CGFloat = 0
     @State private var titleOpacity: CGFloat = 1
+    @State private var isLastTapLocationValid: Bool = false
     
     // Animations
     let rippleEffectScalingAnimation: Animation = .easeIn(duration: 0.3)
@@ -48,6 +49,7 @@ public struct SwiftUIMDButton: View {
     var titleColor: Color { isEnabled ? style.textColor.normal : style.textColor.disabled }
     var isAlignedTextButton: Bool { style.isText && style.buttonAlignment != .center }
     var isButtonShapeRemoved: Bool { isRippleEffectDisabled || isAlignedTextButton}
+    var dragArea: CGRect { CGRect(x: 0, y: 0, width: width, height: height) }
     
     // Button Content
     let title: String
@@ -118,6 +120,7 @@ public struct SwiftUIMDButton: View {
             }
             .onEnded { value in
                 isPressed = false
+                isLastTapLocationValid = dragArea.contains(value.location)
             }
     }
     
@@ -167,8 +170,6 @@ public struct SwiftUIMDButton: View {
         if showIndicator {
             SwiftUIMDActivityIndicator()
                 .activityIndicatorColor(pendingIndicatorColor)
-                .padding(.all, 10)
-                .scaledToFit() // REVIEW: Das war nur gegen das eiern, oder? Vielleicht sollte das in den Activity Indicator selbst rein und vielleicht wäre fixedSize besser?
         } else {
             HStack {
                 leadingIcon
@@ -217,11 +218,12 @@ public struct SwiftUIMDButton: View {
         if pressed {
             startButtonTitleTapAnimation()
         }
-        else {
+        else if isLastTapLocationValid {
             action()
-            elevationShadowOffset = 0
-            elevationShadowRadius = 0
-            elevationShadowOpacity = 0
+            resetElevationAnimation()
+        }
+        else {
+            resetElevationAnimation()
         }
     }
     
@@ -248,8 +250,9 @@ public struct SwiftUIMDButton: View {
     }
     
     private func resetElevationAnimation() {
-        elevationShadowRadius = 0
         elevationShadowOffset = 0
+        elevationShadowRadius = 0
+        elevationShadowOpacity = 0
     }
     
     private func resetButtonTitleAnimation() {
