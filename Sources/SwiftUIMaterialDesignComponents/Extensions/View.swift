@@ -100,4 +100,9 @@ extension View {
             .contentShape(Rectangle())
     }
     
+    /// Provides a Touch Gesture with options to execute actions on start, end or on cancel of the gesture.
+    @discardableResult internal func onTouchGesture(onStarted: @escaping () -> Void, onLocationUpdate: @escaping (CGPoint) -> Void, onEnded: @escaping () -> Void, onCancelled: @escaping () -> Void) -> some View {
+        self.modifier(TouchLocationModifier(onStarted: onStarted, onLocationUpdate: onLocationUpdate, onEnded: onEnded, onCancelled: onCancelled))
+    }
+    
 }
