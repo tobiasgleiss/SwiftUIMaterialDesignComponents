@@ -73,12 +73,12 @@ public struct SwiftUIMDButton: View {
     ///         @State private var isDisabled: Bool = false
     ///
     ///         var body: some View {
-    ///             SGButton("Do stuff", style: .secondary, action: buttonAction)
+    ///             SwiftUIMDButton("Do stuff", style: .secondary, action: buttonAction)
     ///                 .pending(isPending)
     ///                 .disabled(isDisabled)
     ///         }
     ///
-    ///         /// Call from anywhere to toggle the pending indicator on the SGButton
+    ///         /// Call from anywhere to toggle the pending indicator on the Button
     ///         private func togglePending() {
     ///             isPending.toggle()
     ///         }

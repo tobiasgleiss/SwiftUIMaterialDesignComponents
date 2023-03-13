@@ -1,5 +1,5 @@
 //
-// 📄 mdButtonStyle.swift
+// 📄 MDButtonStyle.swift
 // 👨🏼‍💻 Author: Tobias Gleiss
 //
 
