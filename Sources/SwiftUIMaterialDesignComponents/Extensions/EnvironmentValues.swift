@@ -25,6 +25,10 @@ private struct ButtonTapAreaInsets: EnvironmentKey {
     static let defaultValue = EdgeInsets.zero
 }
 
+private struct TextFieldErrorMessage: EnvironmentKey {
+    static let defaultValue = ""
+}
+
 extension EnvironmentValues {
     
     var activityIndicatorColor: Color {
@@ -52,6 +56,10 @@ extension EnvironmentValues {
         set { self[ButtonTapAreaInsets.self] = newValue }
     }
     
+    var textFieldErrorMessage: String {
+        get { self[TextFieldErrorMessage.self] }
+        set { self[TextFieldErrorMessage.self] = newValue }
+    }
 }
 
 extension EdgeInsets {

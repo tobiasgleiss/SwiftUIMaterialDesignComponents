@@ -105,4 +105,16 @@ extension View {
         self.modifier(TouchLocationModifier(onStarted: onStarted, onLocationUpdate: onLocationUpdate, onEnded: onEnded, onCancelled: onCancelled))
     }
     
+    /// Rounds one ore more specified corners to the given value.
+    @discardableResult internal func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+            clipShape( RoundedCornerShape(radius: radius, corners: corners) )
+        }
+    
+    /// Manages the error message view of the SwiftUIMDTextField
+    /// - Parameter errorMessage: The error message to be shown below a SwiftUIMDTextField
+    /// - Returns: The input with all contained SwiftUIMDTextField showing/hiding the error message view with the specified message or the unchanged input otherwise.
+    @discardableResult public func textFieldErrorMessage(_ errorMessage: String) -> some View {
+        environment(\.textFieldErrorMessage, errorMessage)
+    }
+    
 }
