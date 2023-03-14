@@ -5,13 +5,12 @@
 
 import SwiftUI
 
-@available(iOS 15.0, *)
 public struct SwiftUIMDTextField: View {
     
     // View States
-    @FocusState var isFocused: Bool
     @State var isSlashed: Bool
-    @Binding var input: String
+    
+    @Binding var value: String
     @Environment(\.textFieldErrorMessage) private var errorMessage: String
     
     //Animation States
@@ -28,7 +27,6 @@ public struct SwiftUIMDTextField: View {
     
     // Computed Properties
     private var isErrorMessageSet: Bool { errorMessage != "" ? true : false}
-//    private var showPlaceholderBackground: Bool { isFocused && (style == .outlined() || style == .outlinedSecured()) }
     
     // TextField Styling
     private var style: MDTextFieldStyle
@@ -79,7 +77,7 @@ public struct SwiftUIMDTextField: View {
         
         self.placeholderText = placeholder
         self.style = style
-        self._input = value
+        self._value = value
         self.onEditingChanged = onEditingChanged
         self.onCommit = onCommit
         
@@ -104,21 +102,17 @@ public struct SwiftUIMDTextField: View {
         self.isSlashed = style.isSecured
     }
     
-    
-    
     public var body: some View {
         container
     }
     
-    private var container: some View {
+    @ViewBuilder var container: some View {
         VStack(alignment: .leading) {
             
             content
                 .padding(.horizontal, horizontalPadding)
-                .onChange(of: isFocused, perform: focusStateChanged)
                 .background(
                     backgroundLayer
-                        
                 )
             
             errorMessageView
@@ -157,21 +151,16 @@ public struct SwiftUIMDTextField: View {
     
     private var content: some View {
         HStack {
-            
             textFieldContainer
                 .frame(height: textFieldHeight)
             
             Spacer()
 
-            
             iconView
                 .scaledToFit()
                 .frame(width: iconSize.width, height: iconSize.height)
                 .foregroundColor(textColor)
-                
                 .animation(.default, value: isSlashed)
-                
-                
         }
     }
     
@@ -191,8 +180,82 @@ public struct SwiftUIMDTextField: View {
             
             textFieldView
                 .foregroundColor(textColor)
+        }
+    }
+    
+    @ViewBuilder private var textFieldView: some View {
+        if #available(iOS 15.0, *) {
+            TextFieldiOS15(isSlashed: $isSlashed, textFieldValue: $value, onFocusChange: focusStateChanged, onCommit: onCommit)
+        } else {
+            TextFieldiOS14(isSlashed: $isSlashed, textFieldValue: $value, onFocusChange: focusStateChanged, onCommit: onCommit)
+        }
+    }
+    
+    @available(iOS 15.0, *)
+    private struct TextFieldiOS15: View {
+        
+        @Binding var isSlashed: Bool
+        @Binding var textFieldValue: String
+        var onFocusChange: (Bool) -> Void
+        var onCommit: () -> Void
+        @FocusState var isFocused: Bool
+        
+        public var body: some View {
+            textField
+                .onChange(of: isFocused, perform: onFocusChange)
                 .focused($isFocused)
                 .onSubmit(onCommit)
+        }
+        
+        @ViewBuilder private var textField: some View {
+            if isSlashed {
+                SecureField("", text: $textFieldValue)
+            }
+            else {
+                TextField("", text: $textFieldValue)
+            }
+        }
+        
+        private func submitValue() {
+            onCommit()
+        }
+    }
+    
+    private struct TextFieldiOS14: View {
+        
+        @Binding var isSlashed: Bool
+        @Binding var textFieldValue: String
+        var onFocusChange: (Bool) -> Void
+        var onCommit: () -> Void
+        
+        @State var isFocused: Bool = false
+        
+        public var body: some View {
+            textField
+                .onChange(of: isFocused, perform: onFocusChange)
+                .onTapGesture(perform: setFocus)
+        }
+        
+        @ViewBuilder private var textField: some View {
+            if isSlashed {
+                SecureField("", text: $textFieldValue, onCommit: submitValue)
+            }
+            else {
+                TextField("", text: $textFieldValue, onCommit: submitValue)
+            }
+        }
+        
+        private func setFocus() {
+            isFocused = true
+            print("true")
+        }
+        
+        private func submitValue() {
+            onCommit()
+            hideKeyboard()
+            
+            isFocused = false
+            print("false")
         }
     }
     
@@ -219,20 +282,10 @@ public struct SwiftUIMDTextField: View {
             icon?
                 .resizable()
         }
-        
     }
     
     @ViewBuilder private var secureIconView: Image? {
         isSlashed ? secureIcon?.slashed : secureIcon?.unslashed
-    }
-    
-    @ViewBuilder private var textFieldView: some View {
-        if isSlashed {
-            SecureField("", text: $input)
-        }
-        else {
-            TextField("", text: $input)
-        }
     }
     
     private func focusStateChanged(to isFocused: Bool) {
@@ -244,7 +297,7 @@ public struct SwiftUIMDTextField: View {
                 }
             }
         }
-        else if input == "" {
+        else if value == "" {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 resetFocusedAnimation()
             }
