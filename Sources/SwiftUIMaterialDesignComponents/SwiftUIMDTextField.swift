@@ -315,7 +315,7 @@ public struct SwiftUIMDTextField: View {
         transaction.disablesAnimations = true
         withTransaction(transaction) {
             placeholderFontSize = 10
-            placeholderOffset = CGSize(width: 0, height: -18)
+            placeholderOffset = CGSize(width: 0, height: -((textFieldHeight / 2) - 8))
             placeholderColor = style.focusedColor
             borderWidth = 2
             borderColor = style.focusedColor
@@ -327,7 +327,7 @@ public struct SwiftUIMDTextField: View {
         transaction.disablesAnimations = true
         withTransaction(transaction) {
             placeholderFontSize = 10
-            placeholderOffset = CGSize(width: 0, height: -28)
+            placeholderOffset = CGSize(width: 0, height: -(textFieldHeight / 2))
             placeholderColor = style.focusedColor
             borderWidth = 2
             borderColor = style.focusedColor
