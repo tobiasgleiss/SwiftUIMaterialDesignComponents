@@ -26,7 +26,7 @@ public struct SwiftUIMDTextField: View {
     private let onCommit: () -> Void
     
     // Computed Properties
-    private var isErrorMessageSet: Bool { errorMessage != "" ? true : false}
+    private var isErrorStateSet: Bool { errorMessage != "" ? true : false}
     
     // TextField Styling
     private var style: MDTextFieldStyle
@@ -135,7 +135,7 @@ public struct SwiftUIMDTextField: View {
     }
     
     private var currentBackgroundColor: some View {
-        isErrorMessageSet ? errorMessageBackgroundColor : backgroundColor
+        isErrorStateSet ? errorMessageBackgroundColor : backgroundColor
     }
     
     private var outlinedBackground: some View {
@@ -289,7 +289,12 @@ public struct SwiftUIMDTextField: View {
     }
     
     private func focusStateChanged(to isFocused: Bool) {
-        if isFocused {
+        if isErrorStateSet {
+            placeholderColor = style.textColor
+            borderColor = errorMessageColor
+            borderWidth = 1
+        }
+        else if isFocused {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 switch style {
                 case .filled, .filledSecured: startFocusedAnimationForFilled()
@@ -301,11 +306,6 @@ public struct SwiftUIMDTextField: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 resetFocusedAnimation()
             }
-        }
-        else if isErrorMessageSet {
-            placeholderColor = style.textColor
-            borderColor = errorMessageColor
-            borderWidth = 1
         }
         onEditingChanged()
     }
