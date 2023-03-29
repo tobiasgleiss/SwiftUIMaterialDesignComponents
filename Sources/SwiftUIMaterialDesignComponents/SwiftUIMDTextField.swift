@@ -22,7 +22,7 @@ public struct SwiftUIMDTextField: View {
     
     // Constant Properties
     private let placeholderText: String
-    private let onEditingChanged: () -> Void
+    private let onEditingChanged: (Bool) -> Void
     private let onCommit: () -> Void
     
     // Computed Properties
@@ -50,7 +50,7 @@ public struct SwiftUIMDTextField: View {
     ///   - placeholder: The placeholder text appearing on the text field.
     ///   - style: The text field style (see MDTextFieldStyle for options).
     ///   - value: The text field´s value as a Binding.
-    ///   - onEditingChanged: The action to be performed when the text field gets focused.
+    ///   - onEditingChanged: The action to be performed when the text field gets focused or comes out of focus.
     ///   - onCommit: The action to be performed when the text field input has been submitted.
     ///
     /// If the button is followed by a `textFieldErrorMessage` modifier, the text field will change into an error state when the modifiers value has been set to a non-empty string. You can control the error state of the text field by setting the value of `textFieldErrorMessage`.
@@ -73,7 +73,7 @@ public struct SwiftUIMDTextField: View {
     ///
     ///     }
     ///
-    public init(placeholder: String, style: MDTextFieldStyle = .filled(), value: Binding<String>, onEditingChanged: @escaping () -> Void, onCommit: @escaping () -> Void) {
+    public init(placeholder: String, style: MDTextFieldStyle = .filled(), value: Binding<String>, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {} ) {
         
         self.placeholderText = placeholder
         self.style = style
@@ -307,7 +307,7 @@ public struct SwiftUIMDTextField: View {
                 resetFocusedAnimation()
             }
         }
-        onEditingChanged()
+        onEditingChanged(isFocused)
     }
     
     private func startFocusedAnimationForFilled() {
