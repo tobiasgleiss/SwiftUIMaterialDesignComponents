@@ -12,6 +12,7 @@ public struct SwiftUIMDTextField: View {
     
     @Binding var value: String
     @Environment(\.textFieldErrorMessage) private var errorMessage: String
+    @Environment(\.isEnabled) private var isEnabled
     
     //Animation States
     @State var placeholderFontSize = CGFloat(16)
@@ -28,13 +29,8 @@ public struct SwiftUIMDTextField: View {
     // Computed Properties
     private var isErrorStateSet: Bool { errorMessage != "" ? true : false}
     
-    // TextField Styling
+    // TextField General Styling
     private var style: MDTextFieldStyle
-    private let textColor: Color
-    private let backgroundColor: Color
-    private let focusedColor: Color
-    private let errorMessageColor: Color
-    private let errorMessageBackgroundColor: Color
     private let textFieldHeight: CGFloat
     private let errorFieldHeight: CGFloat
     private let cornerRadius: CGFloat
@@ -44,6 +40,17 @@ public struct SwiftUIMDTextField: View {
     private let horizontalPadding: CGFloat
     private let verticalPadding: CGFloat
     private let errorMessageFontSize: CGFloat
+    
+    // TextField Colors
+    
+    private let textColor: Color
+    private let textColorDisabled: Color
+    private let backgroundColor: Color
+    private let backgroundColorDisabled: Color
+    private let borderColorDisabled: Color
+    private let focusedColor: Color
+    private let errorMessageColor: Color
+    private let errorMessageBackgroundColor: Color
     
     /// A Material Design button in SwiftUI
     /// - Parameters:
@@ -83,8 +90,11 @@ public struct SwiftUIMDTextField: View {
         
         self.focusedColor = style.focusedColor
         self.textColor = style.textColor
+        self.textColorDisabled = style.textColorDisabled
         self.backgroundColor = style.backgroundColor
+        self.backgroundColorDisabled = style.backgroundColorDisabled
         self.borderColor = style.borderColor
+        self.borderColorDisabled = style.borderColorDisabled
         self.placeholderColor = style.textColor
         self.errorMessageColor = style.errorMessageColor
         self.errorMessageBackgroundColor = style.errorMessageBackgroundColor
@@ -135,7 +145,8 @@ public struct SwiftUIMDTextField: View {
     }
     
     private var currentBackgroundColor: some View {
-        isErrorStateSet ? errorMessageBackgroundColor : backgroundColor
+        guard isEnabled else { return backgroundColorDisabled }
+        return isErrorStateSet ? errorMessageBackgroundColor : backgroundColor
     }
     
     private var outlinedBackground: some View {
@@ -146,7 +157,7 @@ public struct SwiftUIMDTextField: View {
     private var bottomBorder: some View {
         Rectangle()
             .frame(height: borderWidth)
-            .foregroundColor(borderColor)
+            .foregroundColor(isEnabled ? borderColor : borderColorDisabled)
     }
     
     private var content: some View {
@@ -173,7 +184,7 @@ public struct SwiftUIMDTextField: View {
     private var textFieldContainer: some View {
         ZStack(alignment: .leading) {
             Text(placeholderText)
-                .foregroundColor(placeholderColor)
+                .foregroundColor(isEnabled ? placeholderColor : textColorDisabled)
                 .font(.system(size: placeholderFontSize))
                 .background(placeholderBackground)
                 .offset(placeholderOffset)
