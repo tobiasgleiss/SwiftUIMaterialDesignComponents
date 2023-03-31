@@ -40,6 +40,7 @@ public struct SwiftUIMDButton: View {
     let pendingIndicatorColor: Color
     let elevationShadowColor: Color
     let leadingIcon: Image?
+    let trailingIcon: Image?
     let isRippleEffectDisabled: Bool
     
     // Computed Properties
@@ -62,6 +63,7 @@ public struct SwiftUIMDButton: View {
     ///   - customHeight: The height of the button.
     ///   - customWidth: The width of the button.
     ///   - leadingIcon: The image which is displayed as a leading icon.
+    ///   - trailingIcon: The image which is displayed as a trailing icon.
     ///   - disableRippleEffect: If the RippleEffect should be disabled.
     ///   - action: The action that is executed when the user taps the button.
     ///
@@ -86,7 +88,7 @@ public struct SwiftUIMDButton: View {
     ///     }
     ///
     /// - Attention: If the MDButtonStyle is set to `.text` and it´s property `horizontalAlignment` is set to `.leading` or `.trailing` the RippleEffect will automatically be disabled as well as the button shape. Only a centered text button has the ability to have a RippleEffect. 
-    public init(title: String, style: MDButtonStyle = .contained(), width: CGFloat = SwiftUIMDButton.defaultWidth, height: CGFloat = SwiftUIMDButton.defaultHeight, leadingIcon: Image? = nil, disableRippleEffect: Bool = false, action: @escaping () -> Void = { }) {
+    public init(title: String, style: MDButtonStyle = .contained(), width: CGFloat = SwiftUIMDButton.defaultWidth, height: CGFloat = SwiftUIMDButton.defaultHeight, leadingIcon: Image? = nil, trailingIcon: Image? = nil, disableRippleEffect: Bool = false, action: @escaping () -> Void = { }) {
         self.touchLocation = CGPoint(x: height / 2, y: width / 2)
         self.title = title
         self.action = action
@@ -100,6 +102,7 @@ public struct SwiftUIMDButton: View {
         self.pendingIndicatorColor = style.pendingIndicatorColor
         self.elevationShadowColor = style.buttonElevationShadow.color
         self.leadingIcon = leadingIcon
+        self.trailingIcon = trailingIcon
         self.isRippleEffectDisabled = disableRippleEffect
     }
     
@@ -162,6 +165,9 @@ public struct SwiftUIMDButton: View {
                     .font(style.buttonFont)
                     .fontWeight(.bold)
                     .opacity(titleOpacity)
+                
+                trailingIcon
+                    .foregroundColor(titleColor)
             }
         }
     }
