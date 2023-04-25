@@ -6,26 +6,26 @@
 import SwiftUI
 
 public struct SwiftUIMDRippleEffect: View {
-    
+
     // Default values
     let defaultScaling: CGFloat = 3
     let defaultOpacity: CGFloat = 0
-    
+
     // View States
     @Binding private var isPressed: Bool
     @Binding private var tapLocation: CGPoint
     @Binding private var animationCompletedCallback: Bool
     @State private var scaling: CGFloat
     @State private var opacity: CGFloat
-    @State private var animationCompleted: Bool = true
-    
+    @State private var animationCompleted = true
+
     // Properties
     let color: Color
-    
+
     // Animations
     let scalingAnimation: Animation = .easeIn(duration: 0.25)
     let fadeOutAnimation: Animation = .easeInOut(duration: 0.2)
-    
+
     /// A Material Design Ripple Effect in SwiftUI.
     /// - Parameters:
     ///   - isPressed: A Binding which indicates if the Ripple Effect should be started.
@@ -41,7 +41,7 @@ public struct SwiftUIMDRippleEffect: View {
         self.color = rippleEffectColor
         self._animationCompletedCallback = isFinished
     }
-    
+
     public var body: some View {
         Circle()
             .scale(scaling)
@@ -52,7 +52,7 @@ public struct SwiftUIMDRippleEffect: View {
             .onChange(of: isPressed, perform: pressedStateChanged)
             .onAnimationCompleted(for: opacity, onCompletionExecute: markAnimationCompleted)
     }
-    
+
     private func pressedStateChanged(to isPressed: Bool) {
         if isPressed {
             startRippleEffectScalingAnimation()
@@ -60,7 +60,7 @@ public struct SwiftUIMDRippleEffect: View {
             finishRippleEffectAnimation()
         }
     }
-    
+
     private func startRippleEffectScalingAnimation() {
         animationCompleted = false
         animationCompletedCallback = false
@@ -72,7 +72,7 @@ public struct SwiftUIMDRippleEffect: View {
             scaling = 30
         }
     }
-    
+
     private func finishRippleEffectAnimation() {
         guard animationCompleted else { return }
         var transaction = Transaction(animation: scalingAnimation)
@@ -82,11 +82,11 @@ public struct SwiftUIMDRippleEffect: View {
             scaling = defaultScaling
         }
     }
-    
+
     private func markAnimationCompleted() {
         animationCompleted = true
         animationCompletedCallback = true
         if !isPressed { finishRippleEffectAnimation() }
     }
-    
+
 }

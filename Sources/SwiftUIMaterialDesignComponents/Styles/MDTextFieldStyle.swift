@@ -7,7 +7,7 @@ import Foundation
 import SwiftUI
 
 public enum MDTextFieldStyle: Equatable {
-    
+
     case filled(
         focusedColor: Color = MDTextFieldStyle.mdFilledTextFieldDefaultFocusedColor,
         textColor: Color = MDTextFieldStyle.mdFilledTextFieldDefaultTextColor,
@@ -24,7 +24,7 @@ public enum MDTextFieldStyle: Equatable {
         cornerRadius: CGFloat = MDTextFieldStyle.mdFilledTextFieldDefaultTopCornerRadius,
         padding: (horizontal: CGFloat, vertical: CGFloat) = (MDTextFieldStyle.mdFilledTextFieldDefaultHorizontalPadding, MDTextFieldStyle.mdFilledTextFieldDefaultVerticalPadding),
         iconSize: CGSize = MDTextFieldStyle.mdFilledTextFieldDefaultTrailingIconSize)
-    
+
     case filledSecured(
         focusedColor: Color = MDTextFieldStyle.mdFilledTextFieldDefaultFocusedColor,
         textColor: Color = MDTextFieldStyle.mdFilledTextFieldDefaultTextColor,
@@ -42,7 +42,7 @@ public enum MDTextFieldStyle: Equatable {
         padding: (horizontal: CGFloat, vertical: CGFloat) = (MDTextFieldStyle.mdFilledTextFieldDefaultHorizontalPadding, MDTextFieldStyle.mdFilledTextFieldDefaultVerticalPadding),
         iconSize: CGSize = MDTextFieldStyle.mdFilledTextFieldDefaultTrailingIconSize,
         securedByDefault: Bool = true)
-    
+
     // TODO: Remove background color from .outlined
     case outlined(
         focusedColor: Color = MDTextFieldStyle.mdFilledTextFieldDefaultFocusedColor,
@@ -60,7 +60,7 @@ public enum MDTextFieldStyle: Equatable {
         cornerRadius: CGFloat = MDTextFieldStyle.mdFilledTextFieldDefaultTopCornerRadius,
         padding: (horizontal: CGFloat, vertical: CGFloat) = (MDTextFieldStyle.mdFilledTextFieldDefaultHorizontalPadding, MDTextFieldStyle.mdFilledTextFieldDefaultVerticalPadding),
         iconSize: CGSize = MDTextFieldStyle.mdFilledTextFieldDefaultTrailingIconSize)
-    
+
     case outlinedSecured(
         focusedColor: Color = MDTextFieldStyle.mdFilledTextFieldDefaultFocusedColor,
         textColor: Color = MDTextFieldStyle.mdFilledTextFieldDefaultTextColor,
@@ -78,7 +78,7 @@ public enum MDTextFieldStyle: Equatable {
         padding: (horizontal: CGFloat, vertical: CGFloat) = (MDTextFieldStyle.mdFilledTextFieldDefaultHorizontalPadding, MDTextFieldStyle.mdFilledTextFieldDefaultVerticalPadding),
         iconSize: CGSize = MDTextFieldStyle.mdFilledTextFieldDefaultTrailingIconSize,
         securedByDefault: Bool = true)
-    
+
     var focusedColor: Color {
         switch self {
         case let .filled(color, _, _, _, _, _, _, _, _, _, _, _, _, _, _): return color
@@ -87,7 +87,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(color, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _): return color
         }
     }
-    
+
     var textColor: Color {
         switch self {
         case let .filled(_, color, _, _, _, _, _, _, _, _, _, _, _, _, _): return color
@@ -96,7 +96,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, color, _, _, _, _, _, _, _, _, _, _, _, _, _, _): return color
         }
     }
-    
+
     var textColorDisabled: Color {
         switch self {
         case let .filled(_, _, color, _, _, _, _, _, _, _, _, _, _, _, _): return color
@@ -105,7 +105,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, color, _, _, _, _, _, _, _, _, _, _, _, _, _): return color
         }
     }
-    
+
     var backgroundColor: Color {
         switch self {
         case let .filled(_, _, _, color, _, _, _, _, _, _, _, _, _, _, _): return color
@@ -114,7 +114,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, color, _, _, _, _, _, _, _, _, _, _, _, _): return color
         }
     }
-    
+
     var backgroundColorDisabled: Color {
         switch self {
         case let .filled(_, _, _, _, color, _, _, _, _, _, _, _, _, _, _): return color
@@ -123,7 +123,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, color, _, _, _, _, _, _, _, _, _, _, _): return color
         }
     }
-    
+
     var borderColor: Color {
         switch self {
         case let .filled(_, _, _, _, _, color, _, _, _, _, _, _, _, _, _): return color
@@ -132,7 +132,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, color, _, _, _, _, _, _, _, _, _, _): return color
         }
     }
-    
+
     var borderColorDisabled: Color {
         switch self {
         case let .filled(_, _, _, _, _, _, color, _, _, _, _, _, _, _, _): return color
@@ -141,7 +141,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, _, color, _, _, _, _, _, _, _, _, _): return color
         }
     }
-    
+
     var textFieldHeight: CGFloat {
         switch self {
         case let .filled(_, _, _, _, _, _, _, height, _, _, _, _, _, _, _): return height
@@ -150,7 +150,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, _, _, height, _, _, _, _, _, _, _, _): return height
         }
     }
-    
+
     var errorFieldHeight: CGFloat {
         switch self {
         case let .filled(_, _, _, _, _, _, _, _, height, _, _, _, _, _, _): return height
@@ -159,7 +159,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, _, _, _, height, _, _, _, _, _, _, _): return height
         }
     }
-    
+
     var errorMessageFontSize: CGFloat {
         switch self {
         case let .filled(_, _, _, _, _, _, _, _, _, size, _, _, _, _, _): return size
@@ -168,7 +168,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, _, _, _, _, size, _, _, _, _, _, _): return size
         }
     }
-    
+
     var errorMessageColor: Color {
         switch self {
         case let .filled(_, _, _, _, _, _, _, _, _, _, color, _, _, _, _): return color
@@ -177,7 +177,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, _, _, _, _, _, color, _, _, _, _, _): return color
         }
     }
-    
+
     var errorMessageBackgroundColor: Color {
         switch self {
         case let .filled(_, _, _, _, _, _, _, _, _, _, _, color, _, _, _): return color
@@ -186,7 +186,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, _, _, _, _, _, _, color, _, _, _, _): return color
         }
     }
-    
+
     var cornerRadius: CGFloat {
         switch self {
         case let .filled(_, _, _, _, _, _, _, _, _, _, _, _, radius, _, _): return radius
@@ -195,7 +195,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, _, _, _, _, _, _, _, radius, _, _, _): return radius
         }
     }
-    
+
     var padding: (horizontal: CGFloat, vertical: CGFloat) {
         switch self {
         case let .filled(_, _, _, _, _, _, _, _, _, _, _, _, _, padding, _): return padding
@@ -204,7 +204,7 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, _, _, _, _, _, _, _, _, padding, _, _): return padding
         }
     }
-    
+
     var iconSize: CGSize {
         switch self {
         case let .filled(_, _, _, _, _, _, _, _, _, _, _, _, _, _, size): return size
@@ -213,18 +213,18 @@ public enum MDTextFieldStyle: Equatable {
         case let .outlinedSecured(_, _, _, _, _, _, _, _, _, _, _, _, _, _, size, _): return size
         }
     }
-    
+
     var isSecured: Bool {
         switch self {
-        case .filled(_, _, _, _, _, _, _, _, _, _, _, _, _, _, _): return false
+        case .filled: return false
         case let .filledSecured(_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, isSecured): return isSecured
-        case .outlined(_, _, _, _, _, _, _, _, _, _, _, _, _, _, _): return false
+        case .outlined: return false
         case let .outlinedSecured(_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, isSecured): return isSecured
         }
     }
-    
+
     public static func == (lhs: MDTextFieldStyle, rhs: MDTextFieldStyle) -> Bool {
-        return lhs.focusedColor == rhs.focusedColor &&
+        lhs.focusedColor == rhs.focusedColor &&
         lhs.textColor == rhs.textColor &&
         lhs.backgroundColor == rhs.backgroundColor &&
         lhs.borderColor == rhs.borderColor &&
@@ -238,7 +238,7 @@ public enum MDTextFieldStyle: Equatable {
         lhs.iconSize == rhs.iconSize &&
         lhs.isSecured == rhs.isSecured
     }
-    
+
     // Default values
     public static let mdFilledTextFieldDefaultHeight = CGFloat(56)
     public static let mdFilledTextFieldDefaultErrorFieldHeight = CGFloat(24)
@@ -247,7 +247,7 @@ public enum MDTextFieldStyle: Equatable {
     public static let mdFilledTextFieldDefaultVerticalPadding = CGFloat(12)
     public static let mdFilledTextFieldDefaultTopCornerRadius = CGFloat(5)
     public static let mdFilledTextFieldDefaultTrailingIconSize = CGSize(width: 24, height: 24)
-    
+
     // Default Colors
     public static let mdFilledTextFieldDefaultFocusedColor = Color(#colorLiteral(red: 0.3843137255, green: 0, blue: 0.9333333333, alpha: 1))
     public static let mdFilledTextFieldDefaultBackgroundColor = Color(#colorLiteral(red: 0.9254901961, green: 0.9254901961, blue: 0.9254901961, alpha: 1))

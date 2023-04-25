@@ -1,8 +1,7 @@
 //
 // 📄 TouchLocationModifier.swift
-// 👨‍💻 Author: Tobias Gleiss
+// 👨🏼‍💻 Author: Tobias Gleiss
 //
-
 
 import SwiftUI
 

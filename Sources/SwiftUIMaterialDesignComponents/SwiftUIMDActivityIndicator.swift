@@ -10,7 +10,7 @@ public struct SwiftUIMDActivityIndicator: View {
     @Environment(\.activityIndicatorColor) private var color: Color
     @Environment(\.activityIndicatorDiameter) private var diameter: CGFloat
     @Environment(\.activityIndicatorStrokeWidth) private var strokeWidth: CGFloat
-    
+
     @Binding private var isActive: Bool
 
     // Animation States
@@ -69,7 +69,7 @@ public struct SwiftUIMDActivityIndicator: View {
             .onAnimationCompleted(for: animatedRotation, onCompletionExecute: restartAnimationLoop)
             .onChange(of: isActive, perform: animationStateChanged)
     }
-    
+
     private func animationStateChanged(to animated: Bool) {
         if animated { startRotationAnimation() }
     }
@@ -105,19 +105,19 @@ public struct SwiftUIMDActivityIndicator: View {
         }
         startRotationAnimation()
     }
-    
+
     private func finishAnimation() {
         var transaction = Transaction(animation: springAnimation)
         transaction.disablesAnimations = true
         withTransaction(transaction) { trimEnd = 1 }
     }
-    
+
 }
 
 struct SwiftUIMDActivityIndicator_Previews: PreviewProvider {
-    
+
     static var previews: some View {
         SwiftUIMDActivityIndicator()
     }
-    
+
 }

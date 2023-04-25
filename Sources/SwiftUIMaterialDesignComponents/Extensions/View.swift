@@ -1,6 +1,6 @@
 //
 // 📄 View.swift
-// 👨‍💻 Author: Tobias Gleiss
+// 👨🏼‍💻 Author: Tobias Gleiss
 //
 
 import SwiftUI
@@ -13,7 +13,7 @@ extension View {
     @discardableResult public func pending(_ isPending: Bool) -> some View {
         environment(\.isButtonPending, isPending)
     }
-    
+
     /// Sets the color of the SwiftUIMDActivityIndicator
     /// - Parameter color: The color to be used
     /// - Returns: The SwiftUIMDActivityIndicator using the specifed color.
@@ -34,9 +34,9 @@ extension View {
     @discardableResult public func activityIndicatorStrokeWidth(_ strokeWidth: CGFloat) -> some View {
         environment(\.activityIndicatorStrokeWidth, strokeWidth)
     }
-    
+
     /// Increases the tap area around a SwiftUIMDButton. This is especially helpful on horizontally aligned text only buttons.
-    /// - Parameters: 
+    /// - Parameters:
     ///   - edges: The edges to inset
     ///   - length: The length of the inset
     @discardableResult public func increaseButtonTapArea(_ edges: Edge.Set = .all, by length: CGFloat) -> some View {
@@ -46,18 +46,18 @@ extension View {
         let trailingInset = (edges == .all || edges == .horizontal || edges == .trailing) ? length : 0
         return increaseButtonTapArea(top: topInset, leading: leadingInset, bottom: bottomInset, trailing: trailingInset)
     }
-    
+
     /// Increases the tap area around a SwiftUIMDButton. This is especially helpful on horizontally aligned text only buttons.
-    /// - Parameters: 
+    /// - Parameters:
     ///   - top: The top inset
     ///   - leading: The leading inset
     ///   - bottom: The bottom inset
-    ///   - trailing: The trailing inset   
+    ///   - trailing: The trailing inset
     @discardableResult public func increaseButtonTapArea(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) -> some View {
         let tapAreaInsets = EdgeInsets(top: top, leading: leading, bottom: bottom, trailing: trailing)
         return environment(\.buttonTapAreaInsets, tapAreaInsets)
     }
-    
+
     /// Calls the completion handler whenever an animation on the given value completes.
     /// - Parameters:
     ///   - value: The value to observe for animations.
@@ -66,7 +66,7 @@ extension View {
     @discardableResult internal func onAnimationCompleted<Value: VectorArithmetic>(for value: Value, onCompletionExecute: @escaping () -> Void) -> ModifiedContent<Self, AnimationObserverModifier<Value>> {
         modifier(AnimationObserverModifier(observedValue: value, onCompletionExecute: onCompletionExecute))
     }
-    
+
     /// Hide or show the view based on a boolean value.
     /// - Parameters:
     ///   - isHidden: Boolean value indicating whether or not to hide the view
@@ -87,36 +87,35 @@ extension View {
     @discardableResult internal func hidden(_ isHidden: Bool, andRemoved remove: Bool = false) -> some View {
         modifier(HiddenModifier(isHidden: isHidden, remove: remove))
     }
-    
+
     /// Sets the frame of the view based on a condition.
     @discardableResult internal func conditionalFrameWidth(_ width: CGFloat, if isActive: Bool) -> some View {
         modifier(ConditionalFrameModifier(isActive: isActive, width: width))
     }
-    
+
     /// Increases the Tap Area of the View by the given insets.
     @discardableResult internal func increaseTapArea(_ tapAreaInsets: EdgeInsets) -> some View {
-        self
-            .padding(tapAreaInsets)
+        padding(tapAreaInsets)
             .contentShape(Rectangle())
     }
-    
+
     /// Provides a Touch Gesture with options to execute actions on start, end or on cancel of the gesture.
     @discardableResult internal func onTouchGesture(onStarted: @escaping () -> Void, onLocationUpdate: @escaping (CGPoint) -> Void, onEnded: @escaping () -> Void, onCancelled: @escaping () -> Void) -> some View {
-        self.modifier(TouchLocationModifier(onStarted: onStarted, onLocationUpdate: onLocationUpdate, onEnded: onEnded, onCancelled: onCancelled))
+        modifier(TouchLocationModifier(onStarted: onStarted, onLocationUpdate: onLocationUpdate, onEnded: onEnded, onCancelled: onCancelled))
     }
-    
+
     /// Rounds one ore more specified corners to the given value.
     @discardableResult internal func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-            clipShape( RoundedCornerShape(radius: radius, corners: corners) )
+            clipShape(RoundedCornerShape(radius: radius, corners: corners))
         }
-    
+
     /// Manages the error message view of the SwiftUIMDTextField
     /// - Parameter errorMessage: The error message to be shown below a SwiftUIMDTextField
     /// - Returns: The input with all contained SwiftUIMDTextField showing/hiding the error message view with the specified message or the unchanged input otherwise.
     @discardableResult public func textFieldErrorMessage(_ errorMessage: String) -> some View {
         environment(\.textFieldErrorMessage, errorMessage)
     }
-    
+
     internal func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }

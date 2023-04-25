@@ -6,29 +6,29 @@
 import SwiftUI
 
 public struct SwiftUIMDButton: View {
-    
+
     @Environment(\.isButtonPending) private var isPending: Bool
     @Environment(\.isEnabled) private var isEnabled: Bool
     @Environment(\.buttonTapAreaInsets) private var tapAreaInsets: EdgeInsets
-    
+
     // Default values
     public static let defaultWidth: CGFloat = 300
     public static let defaultHeight: CGFloat = 45
-    
+
     // View States
-    @State private var isPressed: Bool = false
-    @State private var showIndicator: Bool = false
+    @State private var isPressed = false
+    @State private var showIndicator = false
     @State private var touchLocation: CGPoint
     @State private var elevationShadowRadius: CGFloat = 0
     @State private var elevationShadowOffset: CGFloat = 0
     @State private var elevationShadowOpacity: CGFloat = 0
     @State private var titleOpacity: CGFloat = 1
-    
+
     // Animations
     let rippleEffectScalingAnimation: Animation = .easeIn(duration: 0.3)
     let rippleEffectFadeOutAnimation: Animation = .easeInOut(duration: 0.2)
     let titleOpacityAnimation: Animation = .easeIn(duration: 0.15)
-    
+
     // Button Styling
     let style: MDButtonStyle
     let borderWidth: CGFloat
@@ -105,17 +105,17 @@ public struct SwiftUIMDButton: View {
         self.trailingIcon = trailingIcon
         self.isRippleEffectDisabled = disableRippleEffect
     }
-    
+
     public var body: some View {
         alignedButton
             .frame(maxWidth: .infinity)
     }
-    
+
     private var alignedButton: some View {
         HStack {
             Spacer()
                 .hidden(horizontalAlignment == .leading, andRemoved: true)
-            
+
             button
                 .contentShape(Rectangle())
                 .conditionalFrameWidth(width, if: !isAlignedTextButton)
@@ -126,23 +126,23 @@ public struct SwiftUIMDButton: View {
                 .shadow(color: elevationShadowColor.opacity(elevationShadowOpacity), radius: elevationShadowRadius, x: 0, y: elevationShadowOffset)
                 .increaseTapArea(tapAreaInsets)
                 .onTouchGesture(onStarted: gestureStarted, onLocationUpdate: updateTouchLocation, onEnded: gestureEnded, onCancelled: gestureCancelled)
-            
+
             Spacer()
                 .hidden(horizontalAlignment == .trailing, andRemoved: true)
         }
     }
-    
+
     private var button: some View {
         ZStack {
             buttonBackgroundShape
-            
+
             SwiftUIMDRippleEffect(isPressed: $isPressed, tapLocation: $touchLocation, rippleEffectColor: rippleEffectColor)
                 .hidden(isButtonShapeRemoved, andRemoved: true)
-                
+
             buttonTitleContent
         }
     }
-    
+
     @ViewBuilder private var buttonBackgroundShape: some View {
         switch style {
         case .contained: containedButtonBackground
@@ -150,7 +150,7 @@ public struct SwiftUIMDButton: View {
         case .text: EmptyView()
         }
     }
-    
+
     @ViewBuilder private var buttonTitleContent: some View {
         if showIndicator {
             SwiftUIMDActivityIndicator()
@@ -159,50 +159,50 @@ public struct SwiftUIMDButton: View {
             HStack {
                 leadingIcon
                     .foregroundColor(titleColor)
-               
+
                 Text(title)
                     .foregroundColor(titleColor)
                     .font(style.buttonFont)
                     .fontWeight(.bold)
                     .opacity(titleOpacity)
-                
+
                 trailingIcon
                     .foregroundColor(titleColor)
             }
         }
     }
-    
+
     private var containedButtonBackground: some View {
         RoundedRectangle(cornerRadius: cornerRadius)
             .foregroundColor(backgroundColor)
     }
-    
+
     private var outlinedButtonBackground: some View {
         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
             .stroke(backgroundColor, lineWidth: borderWidth)
     }
-    
+
     private var textButtonBackground: some View {
         Rectangle()
     }
-    
-    // MARK:  Private View Logic
-    
+
+    // MARK: Private View Logic
+
     private func updateTouchLocation(to location: CGPoint) {
         touchLocation = location
     }
-    
+
     private func gestureStarted() {
         startButtonRippleEffectAnimation()
         startButtonTitleTapAnimation()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { startButtonElevationAnimation() }
     }
-    
+
     private func gestureCancelled() {
         endButtonRippleEffectAnimation()
         resetButtonElevationAnimation()
     }
-    
+
     private func gestureEnded() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             endButtonRippleEffectAnimation()
@@ -210,7 +210,7 @@ public struct SwiftUIMDButton: View {
             resetButtonElevationAnimation()
         }
     }
-    
+
     private func pendingStateChanged(to pending: Bool) {
         if pending {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { showIndicator = true }
@@ -218,7 +218,7 @@ public struct SwiftUIMDButton: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { showIndicator = false }
         }
     }
-    
+
     private func startButtonTitleTapAnimation() {
         if isButtonShapeRemoved {
             var transaction = Transaction(animation: titleOpacityAnimation)
@@ -228,15 +228,15 @@ public struct SwiftUIMDButton: View {
             }
         }
     }
-    
+
     private func startButtonRippleEffectAnimation() {
         isPressed = true
     }
-    
+
     private func endButtonRippleEffectAnimation() {
         isPressed = false
     }
-    
+
     private func startButtonElevationAnimation() {
         var transaction = Transaction(animation: .default)
         transaction.disablesAnimations = true
@@ -246,13 +246,13 @@ public struct SwiftUIMDButton: View {
             elevationShadowOpacity = 1
         }
     }
-    
+
     private func resetButtonElevationAnimation() {
         elevationShadowOffset = 0
         elevationShadowRadius = 0
         elevationShadowOpacity = 0
     }
-    
+
     private func resetButtonTitleAnimation() {
         var transaction = Transaction(animation: titleOpacityAnimation)
         transaction.disablesAnimations = true
@@ -260,12 +260,12 @@ public struct SwiftUIMDButton: View {
             titleOpacity = 1
         }
     }
-    
+
 }
 
 // Implementation inspired by https://www.hackingwithswift.com/quick-start/swiftui/how-to-detect-the-location-of-a-tap-inside-a-view
 struct TouchLocationView: UIViewRepresentable {
-    
+
     struct TouchType: OptionSet {
         let rawValue: Int
         static let started = TouchType(rawValue: 1)
@@ -273,14 +273,14 @@ struct TouchLocationView: UIViewRepresentable {
         static let cancelled = TouchType(rawValue: 3)
         static let all: TouchType = [.started, .ended, .cancelled]
     }
-    
+
     let onStarted: () -> Void
     let onLocationUpdate: (CGPoint) -> Void
     let onEnded: () -> Void
     let onCancelled: () -> Void
-    
+
     let types = TouchType.all
-    
+
     func makeUIView(context: Context) -> TouchLocationUIView {
         let view = TouchLocationUIView()
         view.onStarted = onStarted
@@ -290,44 +290,45 @@ struct TouchLocationView: UIViewRepresentable {
         view.touchTypes = types
         return view
     }
-    
+
     func updateUIView(_ uiView: TouchLocationUIView, context: Context) { }
-    
+
     class TouchLocationUIView: UIView {
+
         var onStarted: (() -> Void)?
         var onLocationUpdate: ((CGPoint) -> Void)?
         var onEnded: (() -> Void)?
         var onCancelled: (() -> Void)?
         var touchTypes: TouchLocationView.TouchType = .all
-        
+
         override init(frame: CGRect) {
             super.init(frame: frame)
             isUserInteractionEnabled = true
         }
-        
+
         required init?(coder: NSCoder) {
             super.init(coder: coder)
             isUserInteractionEnabled = true
         }
-        
+
         override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
             guard let touch = touches.first else { return }
             let location = touch.location(in: self)
             determineAction(with: location, forEvent: .started)
         }
-        
+
         override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
             guard let touch = touches.first else { return }
             let location = touch.location(in: self)
             determineAction(with: location, forEvent: .ended)
         }
-        
+
         override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
             guard let touch = touches.first else { return }
             let location = touch.location(in: self)
             determineAction(with: location, forEvent: .cancelled)
         }
-        
+
         private func determineAction(with location: CGPoint, forEvent event: TouchType) {
             guard touchTypes.contains(event) else { return }
             onLocationUpdate?(location)
@@ -335,8 +336,10 @@ struct TouchLocationView: UIViewRepresentable {
             case .started: onStarted?()
             case .ended: onEnded?()
             case .cancelled: onCancelled?()
-            default: do {}
+            default: do { }
             }
         }
+
     }
+
 }

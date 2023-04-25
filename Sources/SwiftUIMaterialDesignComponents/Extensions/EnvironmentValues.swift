@@ -1,6 +1,6 @@
 //
 // 📄 EnvironmentValues.swift
-// 👨‍💻 Author: Tobias Gleiss
+// 👨🏼‍💻 Author: Tobias Gleiss
 //
 
 import SwiftUI
@@ -30,7 +30,7 @@ private struct TextFieldErrorMessage: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    
+
     var activityIndicatorColor: Color {
         get { self[ActivityIndicatorColor.self] }
         set { self[ActivityIndicatorColor.self] = newValue }
@@ -45,17 +45,17 @@ extension EnvironmentValues {
         get { self[ActivityIndicatorStrokeWidth.self] }
         set { self[ActivityIndicatorStrokeWidth.self] = newValue }
     }
-    
+
     var isButtonPending: Bool {
         get { self[ButtonPendingState.self] }
         set { self[ButtonPendingState.self] = newValue }
     }
-    
+
     var buttonTapAreaInsets: EdgeInsets {
         get { self[ButtonTapAreaInsets.self] }
         set { self[ButtonTapAreaInsets.self] = newValue }
     }
-    
+
     var textFieldErrorMessage: String {
         get { self[TextFieldErrorMessage.self] }
         set { self[TextFieldErrorMessage.self] = newValue }
@@ -63,7 +63,7 @@ extension EnvironmentValues {
 }
 
 extension EdgeInsets {
-    
+
     static let zero = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-    
+
 }
