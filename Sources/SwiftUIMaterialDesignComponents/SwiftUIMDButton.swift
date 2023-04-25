@@ -39,35 +39,34 @@ public struct SwiftUIMDButton: View {
     let rippleEffectColor: Color
     let pendingIndicatorColor: Color
     let elevationShadowColor: Color
-    let leadingIcon: Image?
-    let trailingIcon: Image?
-    let isRippleEffectDisabled: Bool
-    
+    let isRippleEffectDisabled: Bool // TODO: Invert logic to be positive --> isRippleEffectEnabled
+
+    // Button Content
+    let title: String
+    let leadingIcon: SwiftUIMDButtonIcon?
+    let trailingIcon: SwiftUIMDButtonIcon?
+
+    // Button Action
+    let action: () -> Void
+
     // Computed Properties
     var backgroundColor: Color { isEnabled ? style.buttonColor.normal : style.buttonColor.disabled }
     var titleColor: Color { isEnabled ? style.textColor.normal : style.textColor.disabled }
-    var isAlignedTextButton: Bool { style.isText && style.buttonAlignment != .center }
-    var isButtonShapeRemoved: Bool { isRippleEffectDisabled || isAlignedTextButton}
-    var dragArea: CGRect { CGRect(x: 0, y: 0, width: width, height: height) }
-    
-    // Button Content
-    let title: String
-    
-    // Button Action
-    let action: () -> Void
-    
-    /// A Material Design button in SwiftUI
+    var isAlignedTextButton: Bool { style.isText && style.buttonAlignment != .center } // TODO: This doesn't have to be computed!
+    var isButtonShapeRemoved: Bool { isRippleEffectDisabled || isAlignedTextButton } // TODO: This doesn't have to be computed & invert logic to be positive: useButtonShape
+    var dragArea: CGRect { CGRect(x: 0, y: 0, width: width, height: height) } // TODO: Does this have to be computed?
+
+    /// The SwiftUI Material Design Button
     /// - Parameters:
     ///   - title: The text appearing on the button
-    ///   - style: The button style (see MDButtonStyle for options).
-    ///   - customHeight: The height of the button.
-    ///   - customWidth: The width of the button.
-    ///   - leadingIcon: The image which is displayed as a leading icon.
-    ///   - trailingIcon: The image which is displayed as a trailing icon.
-    ///   - disableRippleEffect: If the RippleEffect should be disabled.
-    ///   - action: The action that is executed when the user taps the button.
+    ///   - style: The button style (see `MDButtonStyle` for options)
+    ///   - icon: The icon to display alongside the button title
+    ///   - width: The width of the button
+    ///   - height: The height of the button
+    ///   - isRippleEffectDisabled: Indicates if the RippleEffect should be disabled
+    ///   - action: The action that is executed when the user taps the button
     ///
-    /// If the button is followed by a `pending`, it will be overlayed with an Activity Indicator replacing the title for as long as it is in pending state. A typical use case would look like this:
+    /// If the button is followed by a `pending` view modifier, it will be overlayed with an Activity Indicator replacing the title and icon for as long as it is in pending state. A typical use case would look like this:
     ///
     ///     struct ExampleView: View {
     ///
@@ -75,7 +74,7 @@ public struct SwiftUIMDButton: View {
     ///         @State private var isDisabled: Bool = false
     ///
     ///         var body: some View {
-    ///             SwiftUIMDButton("Do stuff", style: .secondary, action: buttonAction)
+    ///             SwiftUIMDButton(title: "Do stuff", style: .secondary, action: togglePending)
     ///                 .pending(isPending)
     ///                 .disabled(isDisabled)
     ///         }
@@ -87,23 +86,23 @@ public struct SwiftUIMDButton: View {
     ///
     ///     }
     ///
-    /// - Attention: If the MDButtonStyle is set to `.text` and it´s property `horizontalAlignment` is set to `.leading` or `.trailing` the RippleEffect will automatically be disabled as well as the button shape. Only a centered text button has the ability to have a RippleEffect. 
-    public init(title: String, style: MDButtonStyle = .contained(), width: CGFloat = SwiftUIMDButton.defaultWidth, height: CGFloat = SwiftUIMDButton.defaultHeight, leadingIcon: Image? = nil, trailingIcon: Image? = nil, disableRippleEffect: Bool = false, action: @escaping () -> Void = { }) {
-        self.touchLocation = CGPoint(x: height / 2, y: width / 2)
+    /// - Attention: If the style is set to `.text` and it´s property `horizontalAlignment` is set to `.leading` or `.trailing` the ripple effect will automatically be disabled as well as the button shape. Only a centered text button has the ability to have a RippleEffect.
+    public init(title: String, style: MDButtonStyle = .contained(), icon: SwiftUIMDButtonIcon? = nil, width: CGFloat = SwiftUIMDButton.defaultWidth, height: CGFloat = SwiftUIMDButton.defaultHeight, isRippleEffectDisabled: Bool = false, action: @escaping () -> Void = { }) {
         self.title = title
-        self.action = action
         self.style = style
+        self.leadingIcon = icon?.position == .leading ? icon : nil
+        self.trailingIcon = icon?.position == .trailing ? icon : nil
         self.width = width
         self.height = height
+        self.isRippleEffectDisabled = isRippleEffectDisabled
+        self.action = action
+        self.touchLocation = CGPoint(x: height / 2, y: width / 2)
         self.cornerRadius = style.buttonCornerRadius
         self.horizontalAlignment = style.buttonAlignment
         self.borderWidth = style.buttonBorderWidth
         self.rippleEffectColor = style.rippleEffectColor.whileActive
         self.pendingIndicatorColor = style.pendingIndicatorColor
         self.elevationShadowColor = style.buttonElevationShadow.color
-        self.leadingIcon = leadingIcon
-        self.trailingIcon = trailingIcon
-        self.isRippleEffectDisabled = disableRippleEffect
     }
 
     public var body: some View {
