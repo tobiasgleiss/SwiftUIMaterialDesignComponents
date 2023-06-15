@@ -16,6 +16,7 @@ public struct SwiftUIMDButton: View {
     public static let defaultHeight: CGFloat = 45
 
     // View States
+    @State private var isSetupComplete = false
     @State private var isPressed = false
     @State private var showIndicator = false
     @State private var touchLocation: CGPoint
@@ -111,6 +112,8 @@ public struct SwiftUIMDButton: View {
     public var body: some View {
         alignedButton
             .frame(maxWidth: .infinity)
+            .onChange(of: isPending, perform: pendingStateChanged)
+            .onAppear(perform: setInitialPendingState)
     }
 
     private var alignedButton: some View {
@@ -123,10 +126,9 @@ public struct SwiftUIMDButton: View {
                 .conditionalFrameWidth(width, if: !isAlignedTextButton)
                 .frame(height: height)
                 .cornerRadius(cornerRadius)
-                .onChange(of: isPending, perform: pendingStateChanged)
-                .onAnimationCompleted(for: titleOpacity, onCompletionExecute: resetButtonTitleAnimation)
                 .shadow(color: elevationShadowColor.opacity(elevationShadowOpacity), radius: elevationShadowRadius, x: 0, y: elevationShadowOffset)
                 .increaseTapArea(tapAreaInsets)
+                .onAnimationCompleted(for: titleOpacity, onCompletionExecute: resetButtonTitleAnimation)
                 .onTouchGesture(onStarted: gestureStarted, onLocationUpdate: updateTouchLocation, onEnded: gestureEnded, onCancelled: gestureCancelled)
 
             Spacer()
@@ -213,11 +215,27 @@ public struct SwiftUIMDButton: View {
         }
     }
 
+    /// Update the Pending Indicator when the button appears (used from the `.onAppear` modifier).
+    private func setInitialPendingState() {
+        guard !isSetupComplete else { return }
+        pendingStateChanged(to: isPending, after: 0.0)
+    }
+
+    /// Update the Pending Indicator with the default delay (used from the `.onChange` modifier).
+    /// - Parameter pending: The new pending state
     private func pendingStateChanged(to pending: Bool) {
+        pendingStateChanged(to: pending, after: isButtonShapeRemoved ? 0.0 : 0.3)
+    }
+
+    /// Update the Pending Indicator.
+    /// - Parameters:
+    ///   - pending: The new pending state
+    ///   - delayInSeconds: The delay to start and stop the animation (used to wait for the ripple effect to finish first)
+    private func pendingStateChanged(to pending: Bool, after delayInSeconds: Double) {
         if pending {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { showIndicator = true }
+            DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) { showIndicator = true }
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { showIndicator = false }
+            DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) { showIndicator = false }
         }
     }
 
