@@ -28,6 +28,7 @@ public struct SwiftUIMDButton: View {
     let rippleEffectScalingAnimation: Animation = .easeIn(duration: 0.3)
     let rippleEffectFadeOutAnimation: Animation = .easeInOut(duration: 0.2)
     let titleOpacityAnimation: Animation = .easeIn(duration: 0.15)
+    let dragArea: CGRect
 
     // Button Styling
     let style: MDButtonStyle
@@ -39,7 +40,9 @@ public struct SwiftUIMDButton: View {
     let rippleEffectColor: Color
     let pendingIndicatorColor: Color
     let elevationShadowColor: Color
-    let isRippleEffectDisabled: Bool // TODO: Invert logic to be positive --> isRippleEffectEnabled
+    let isRippleEffectEnabled: Bool
+    let isAlignedTextButton: Bool
+    let isButtonShapeRemoved: Bool
 
     // Button Content
     let title: String
@@ -52,9 +55,6 @@ public struct SwiftUIMDButton: View {
     // Computed Properties
     var backgroundColor: Color { isEnabled ? style.buttonColor.normal : style.buttonColor.disabled }
     var titleColor: Color { isEnabled ? style.textColor.normal : style.textColor.disabled }
-    var isAlignedTextButton: Bool { style.isText && style.buttonAlignment != .center } // TODO: This doesn't have to be computed!
-    var isButtonShapeRemoved: Bool { isRippleEffectDisabled || isAlignedTextButton } // TODO: This doesn't have to be computed & invert logic to be positive: useButtonShape
-    var dragArea: CGRect { CGRect(x: 0, y: 0, width: width, height: height) } // TODO: Does this have to be computed?
 
     /// The SwiftUI Material Design Button
     /// - Parameters:
@@ -63,7 +63,7 @@ public struct SwiftUIMDButton: View {
     ///   - icon: The icon to display alongside the button title
     ///   - width: The width of the button
     ///   - height: The height of the button
-    ///   - isRippleEffectDisabled: Indicates if the RippleEffect should be disabled
+    ///   - isRippleEffectEnabled: Indicates if the RippleEffect should be enabled
     ///   - action: The action that is executed when the user taps the button
     ///
     /// If the button is followed by a `pending` view modifier, it will be overlayed with an Activity Indicator replacing the title and icon for as long as it is in pending state. A typical use case would look like this:
@@ -87,14 +87,14 @@ public struct SwiftUIMDButton: View {
     ///     }
     ///
     /// - Attention: If the style is set to `.text` and it´s property `horizontalAlignment` is set to `.leading` or `.trailing` the ripple effect will automatically be disabled as well as the button shape. Only a centered text button has the ability to have a RippleEffect.
-    public init(title: String, style: MDButtonStyle = .contained(), icon: SwiftUIMDButtonIcon? = nil, width: CGFloat = SwiftUIMDButton.defaultWidth, height: CGFloat = SwiftUIMDButton.defaultHeight, isRippleEffectDisabled: Bool = false, action: @escaping () -> Void = { }) {
+    public init(title: String, style: MDButtonStyle = .contained(), icon: SwiftUIMDButtonIcon? = nil, width: CGFloat = SwiftUIMDButton.defaultWidth, height: CGFloat = SwiftUIMDButton.defaultHeight, isRippleEffectEnabled: Bool = true, action: @escaping () -> Void = { }) {
         self.title = title
         self.style = style
         self.leadingIcon = icon?.position == .leading ? icon : nil
         self.trailingIcon = icon?.position == .trailing ? icon : nil
         self.width = width
         self.height = height
-        self.isRippleEffectDisabled = isRippleEffectDisabled
+        self.isRippleEffectEnabled = isRippleEffectEnabled
         self.action = action
         self.touchLocation = CGPoint(x: height / 2, y: width / 2)
         self.cornerRadius = style.buttonCornerRadius
@@ -103,6 +103,9 @@ public struct SwiftUIMDButton: View {
         self.rippleEffectColor = style.rippleEffectColor.whileActive
         self.pendingIndicatorColor = style.pendingIndicatorColor
         self.elevationShadowColor = style.buttonElevationShadow.color
+        self.isAlignedTextButton = style.isText && style.buttonAlignment != .center
+        self.dragArea = CGRect(x: 0, y: 0, width: width, height: height)
+        self.isButtonShapeRemoved = !isRippleEffectEnabled || isAlignedTextButton
     }
 
     public var body: some View {
