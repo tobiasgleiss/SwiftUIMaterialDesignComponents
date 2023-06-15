@@ -1,15 +1,15 @@
 //
 // 📄 ConditionalFrameModifier.swift
-// 👨‍💻 Author: Tobias Gleiss
+// 👨🏼‍💻 Author: Tobias Gleiss
 //
 
 import SwiftUI
 
 internal struct ConditionalFrameModifier: ViewModifier {
-    
+
     var isActive: Bool
     var width: CGFloat
-    
+
     @ViewBuilder func body(content: Content) -> some View {
         if isActive {
             content
@@ -18,5 +18,5 @@ internal struct ConditionalFrameModifier: ViewModifier {
             content
         }
     }
-    
+
 }

@@ -6,7 +6,7 @@ Welcome to SwiftUIMaterialDesignComponents! This package tries to recreate sever
 
 The Material Design circular [Activity Indicator](https://m2.material.io/components/progress-indicators#usage) (or progress indicator).
 
-<img alt="SwiftUIMDActivityIndicator" src="https://raw.githubusercontent.com/tobiasgleiss/SwiftUIMaterialDesignComponents/develop/Sources/Readme/SwiftUIMDActivityIndicator.gif" height="100"/>
+<img alt="SwiftUIMDActivityIndicator" src="Sources/Readme/SwiftUIMDActivityIndicator.gif?raw=1" height="100"/>
 
 Basic usage:
 ```sh
@@ -25,7 +25,7 @@ You can customize these style options further with creating your own styles with
 
 ## Contained Button
 
-<img alt="SwiftUIMDButton Contained" src="https://github.com/tobiasgleiss/SwiftUIMaterialDesignComponents/blob/develop/Sources/Readme/SwiftUIMDButton_Contained.gif?raw=true" height="75"/>
+<img alt="SwiftUIMDButton Contained" src="Sources/Readme/SwiftUIMDButton_Contained.gif?raw=1" height="75"/>
 
 Basic usage:
 ```sh
@@ -34,7 +34,7 @@ SwiftUIMDButton(title: "My Contained Button", style: .contained())
 
 ## Outlined Button
 
-<img alt="SwiftUIMDButton Outlined" src="https://github.com/tobiasgleiss/SwiftUIMaterialDesignComponents/blob/develop/Sources/Readme/SwiftUIMDButton_Outlined.gif?raw=true" height="75"/>
+<img alt="SwiftUIMDButton Outlined" src="Sources/Readme/SwiftUIMDButton_Outlined.gif?raw=1" height="75"/>
 
 Basic usage:
 ```sh
@@ -43,7 +43,7 @@ SwiftUIMDButton(title: "My Outlined Button", style: .outlined())
 
 ## Text Button
 
-<img alt="SwiftUIMDButton Text" src="https://github.com/tobiasgleiss/SwiftUIMaterialDesignComponents/blob/develop/Sources/Readme/SwiftUIMDButton_Text.gif?raw=true" height="75"/>
+<img alt="SwiftUIMDButton Text" src="Sources/Readme/SwiftUIMDButton_Text.gif?raw=1" height="75"/>
 
 Basic usage:
 ```sh
@@ -65,7 +65,7 @@ You can customize these style options further with creating your own styles with
 
 ## Filled TextField
 
-<img alt="SwiftUIMDTextField Filled" src="https://github.com/tobiasgleiss/SwiftUIMaterialDesignComponents/blob/develop/Sources/Readme/SwiftUIMDTextField_Filled.gif?raw=true" height="125"/>
+<img alt="SwiftUIMDTextField Filled" src="Sources/Readme/SwiftUIMDTextField_Filled.gif?raw=1" height="125"/>
 
 Basic usage:
 ```sh
@@ -78,7 +78,7 @@ SwiftUIMDTextField(placeholder: "My Filled TextField", style: .filled(), value: 
 
 ## Filled Secured TextField
 
-<img alt="SwiftUIMDTextField Filled Secured" src="https://github.com/tobiasgleiss/SwiftUIMaterialDesignComponents/blob/develop/Sources/Readme/SwiftUIMDTextField_FilledSecured.gif?raw=true" height="125"/>
+<img alt="SwiftUIMDTextField Filled Secured" src="Sources/Readme/SwiftUIMDTextField_FilledSecured.gif?raw=1" height="125"/>
 
 Basic usage:
 ```sh
@@ -91,7 +91,7 @@ SwiftUIMDTextField(placeholder: "My Filled Secured TextField", style: .filledSec
 
 ## Outlined TextField
 
-<img alt="SwiftUIMDTextField Outlined" src="https://github.com/tobiasgleiss/SwiftUIMaterialDesignComponents/blob/develop/Sources/Readme/SwiftUIMDTextField_Outlined.gif?raw=true" height="125"/>
+<img alt="SwiftUIMDTextField Outlined" src="Sources/Readme/SwiftUIMDTextField_Outlined.gif?raw=1" height="125"/>
 
 Basic usage:
 ```sh
@@ -105,7 +105,7 @@ SwiftUIMDTextField(placeholder: "My Outlined TextField", style: .outlined(), val
 
 ## Outlined Secured TextField
 
-<img alt="SwiftUIMDTextField Outlined" src="https://github.com/tobiasgleiss/SwiftUIMaterialDesignComponents/blob/develop/Sources/Readme/SwiftUIMDTextField_OutlinedSecured.gif?raw=true" height="125"/>
+<img alt="SwiftUIMDTextField Outlined" src="Sources/Readme/SwiftUIMDTextField_OutlinedSecured.gif?raw=1" height="125"/>
 
 Basic usage:
 ```sh
@@ -122,7 +122,7 @@ The Material Design Ripple Effect. Please have a look at the initializer documen
 
 **Note**: The SwiftUIMDButton has the Ripple Effect already built in. 
 
-<img alt="SwiftUIMDRippleEffect" src="https://github.com/tobiasgleiss/SwiftUIMaterialDesignComponents/blob/develop/Sources/Readme/SwiftUIMDRippleEffect.gif?raw=true" height="125"/>
+<img alt="SwiftUIMDRippleEffect" src="Sources/Readme/SwiftUIMDRippleEffect.gif?raw=1" height="125"/>
 
 Basic usage:
 ```sh
