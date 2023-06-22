@@ -1,11 +1,11 @@
 //
-// 📄 SwiftUIMDActivityIndicator.swift
+// 📄 MDActivityIndicator.swift
 // 👨🏼‍💻 Author: Tobias Gleiss
 //
 
 import SwiftUI
 
-public struct SwiftUIMDActivityIndicator: View {
+public struct MDActivityIndicator: View {
 
     @Environment(\.activityIndicatorColor) private var color: Color
     @Environment(\.activityIndicatorDiameter) private var diameter: CGFloat
@@ -114,10 +114,10 @@ public struct SwiftUIMDActivityIndicator: View {
 
 }
 
-struct SwiftUIMDActivityIndicator_Previews: PreviewProvider {
+struct MDActivityIndicator_Previews: PreviewProvider {
 
     static var previews: some View {
-        SwiftUIMDActivityIndicator()
+        MDActivityIndicator()
     }
 
 }
