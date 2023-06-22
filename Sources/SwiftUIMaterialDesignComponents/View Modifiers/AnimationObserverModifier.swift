@@ -5,9 +5,22 @@
 
 import SwiftUI
 
-public struct AnimationObserverModifier<Value>: AnimatableModifier where Value: VectorArithmetic {
+extension View {
 
-    public var animatableData: Value {
+    /// Calls the completion handler whenever an animation on the given value completes.
+    /// - Parameters:
+    ///   - value: The value to observe for animations.
+    ///   - onCompletionExecute: The completion callback to call once the animation completes.
+    /// - Returns: A modified `View` instance with the observer attached.
+    @discardableResult func onAnimationCompleted<Value: VectorArithmetic>(for value: Value, onCompletionExecute: @escaping () -> Void) -> ModifiedContent<Self, AnimationObserverModifier<Value>> {
+        modifier(AnimationObserverModifier(observedValue: value, onCompletionExecute: onCompletionExecute))
+    }
+
+}
+
+struct AnimationObserverModifier<Value>: AnimatableModifier where Value: VectorArithmetic {
+
+    var animatableData: Value {
         didSet {
             notifyIfValueMatched()
             notifyCompletionIfFinished()
@@ -27,6 +40,10 @@ public struct AnimationObserverModifier<Value>: AnimatableModifier where Value: 
         self.onCompletionExecute = onCompletionExecute
     }
 
+    func body(content: Content) -> some View {
+        content
+    }
+
     private func notifyIfValueMatched() {
         guard animatableData == matchValue else { return }
         DispatchQueue.main.async {
@@ -39,10 +56,6 @@ public struct AnimationObserverModifier<Value>: AnimatableModifier where Value: 
         DispatchQueue.main.async {
             onCompletionExecute()
         }
-    }
-
-    public func body(content: Content) -> some View {
-        content
     }
 
 }
