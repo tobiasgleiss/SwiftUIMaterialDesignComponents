@@ -1,11 +1,11 @@
 //
-// 📄 SwiftUIMDRippleEffect.swift
+// 📄 MDRippleEffect.swift
 // 👨🏼‍💻 Author: Tobias Gleiss
 //
 
 import SwiftUI
 
-public struct SwiftUIMDRippleEffect: View {
+public struct MDRippleEffect: View {
 
     // Default values
     let defaultScaling: CGFloat = 3
