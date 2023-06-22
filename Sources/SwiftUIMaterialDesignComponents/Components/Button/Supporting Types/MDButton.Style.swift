@@ -48,7 +48,7 @@ public extension MDButton {
             self.borderWidth = borderWidth
             self.cornerRadius = cornerRadius
             self.activityIndicatorColor = textColor.primary
-            self.rippleEffectColor = ColorPair(buttonColor.primary, disabled: .clear)
+            self.rippleEffectColor = ColorPair(textColor.primary, disabled: .clear)
             self.shadowColor = baseType == .contained ? .black.opacity(0.2) : .clear // TODO: Handling for Dark Mode -> No Elevation, something else?
             self.elevation = baseType == .contained ? 8 : 0
         }
