@@ -30,6 +30,7 @@ public struct MDButton: View {
     let rippleEffectFadeOutAnimation: Animation = .easeInOut(duration: 0.2)
     let titleOpacityAnimation: Animation = .easeIn(duration: 0.15)
     let dragArea: CGRect
+    let limitGestureToBounds: Bool
 
     // Button Styling
     let style: Style
@@ -65,6 +66,7 @@ public struct MDButton: View {
     ///   - width: The width of the button
     ///   - height: The height of the button
     ///   - isRippleEffectEnabled: Indicates if the RippleEffect should be enabled
+    ///   - limitGestureToBounds: Indicates if the gesture should be cancelled if a drag gesture exceeds the bounds of the button
     ///   - action: The action that is executed when the user taps the button
     ///
     /// If the button is followed by a `pending` view modifier, it will be overlayed with an Activity Indicator replacing the title and icon for as long as it is in pending state. A typical use case would look like this:
@@ -88,7 +90,7 @@ public struct MDButton: View {
     ///     }
     ///
     /// - Attention: If the style is set to `.text` and it´s property `horizontalAlignment` is set to `.leading` or `.trailing` the ripple effect will automatically be disabled as well as the button shape. Only a centered text button has the ability to have a RippleEffect.
-    public init(title: String, style: Style = .contained, icon: Icon? = nil, width: CGFloat = defaultWidth, height: CGFloat = defaultHeight, isRippleEffectEnabled: Bool = true, action: @escaping () -> Void = { }) {
+    public init(title: String, style: Style = .contained, icon: Icon? = nil, width: CGFloat = defaultWidth, height: CGFloat = defaultHeight, isRippleEffectEnabled: Bool = true, limitGestureToBounds: Bool = true, action: @escaping () -> Void = { }) {
         self.title = title
         self.style = style
         self.leadingIcon = icon?.position == .leading ? icon : nil
@@ -106,6 +108,7 @@ public struct MDButton: View {
         self.elevationShadowColor = style.shadowColor
         self.isAlignedTextButton = style.isTextOnly && style.textAlignment != .center
         self.dragArea = CGRect(x: 0, y: 0, width: width, height: height)
+        self.limitGestureToBounds = limitGestureToBounds
         self.isButtonShapeRemoved = !isRippleEffectEnabled || isAlignedTextButton
     }
 
@@ -129,7 +132,7 @@ public struct MDButton: View {
                 .shadow(color: elevationShadowColor.opacity(elevationShadowOpacity), radius: elevationShadowRadius, x: 0, y: elevationShadowOffset)
                 .increaseTapArea(tapAreaInsets)
                 .onAnimationCompleted(for: titleOpacity, onCompletionExecute: resetButtonTitleAnimation)
-                .onTouchGesture(onStarted: gestureStarted, onLocationUpdate: updateTouchLocation, onEnded: gestureEnded, onCancelled: gestureCancelled)
+                .onTouchGesture(limitGestureToBounds: limitGestureToBounds, onStarted: gestureStarted, onLocationUpdate: updateTouchLocation, onEnded: gestureEnded, onCancelled: gestureCancelled)
 
             Spacer()
                 .hidden(horizontalAlignment == .trailing, andRemoved: true)
@@ -204,7 +207,7 @@ public struct MDButton: View {
 
     private func gestureCancelled() {
         endButtonRippleEffectAnimation()
-        resetButtonElevationAnimation()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { resetButtonElevationAnimation() })
     }
 
     private func gestureEnded() {

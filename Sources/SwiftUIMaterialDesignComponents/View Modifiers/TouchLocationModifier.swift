@@ -8,14 +8,15 @@ import SwiftUI
 extension View {
 
     /// Provides a Touch Gesture with options to execute actions on start, end or on cancel of the gesture.
-    @discardableResult func onTouchGesture(onStarted: @escaping () -> Void, onLocationUpdate: @escaping (CGPoint) -> Void, onEnded: @escaping () -> Void, onCancelled: @escaping () -> Void) -> some View {
-        modifier(TouchLocationModifier(onStarted: onStarted, onLocationUpdate: onLocationUpdate, onEnded: onEnded, onCancelled: onCancelled))
+    @discardableResult func onTouchGesture(limitGestureToBounds: Bool, onStarted: @escaping () -> Void, onLocationUpdate: @escaping (CGPoint) -> Void, onEnded: @escaping () -> Void, onCancelled: @escaping () -> Void) -> some View {
+        modifier(TouchLocationModifier(limitGestureToBounds: limitGestureToBounds, onStarted: onStarted, onLocationUpdate: onLocationUpdate, onEnded: onEnded, onCancelled: onCancelled))
     }
 
 }
 
 private struct TouchLocationModifier: ViewModifier {
 
+    let limitGestureToBounds: Bool
     let onStarted: () -> Void
     let onLocationUpdate: (CGPoint) -> Void
     let onEnded: () -> Void
@@ -27,7 +28,7 @@ private struct TouchLocationModifier: ViewModifier {
     }
 
     private var touchLocationView: some View {
-        TouchLocationView(onStarted: onStarted, onLocationUpdate: onLocationUpdate, onEnded: onEnded, onCancelled: onCancelled)
+        TouchLocationView(limitGestureToBounds: limitGestureToBounds, onStarted: onStarted, onLocationUpdate: onLocationUpdate, onEnded: onEnded, onCancelled: onCancelled)
     }
 
 }
@@ -35,12 +36,11 @@ private struct TouchLocationModifier: ViewModifier {
 // Implementation inspired by https://www.hackingwithswift.com/quick-start/swiftui/how-to-detect-the-location-of-a-tap-inside-a-view
 private struct TouchLocationView: UIViewRepresentable {
 
+    let limitGestureToBounds: Bool
     let onStarted: () -> Void
     let onLocationUpdate: (CGPoint) -> Void
     let onEnded: () -> Void
     let onCancelled: () -> Void
-
-    let types = TouchType.all
 
     func makeUIView(context: Context) -> TouchLocationUIView {
         let view = TouchLocationUIView()
@@ -48,7 +48,10 @@ private struct TouchLocationView: UIViewRepresentable {
         view.onLocationUpdate = onLocationUpdate
         view.onEnded = onEnded
         view.onCancelled = onCancelled
-        view.touchTypes = types
+        view.limitGestureToBounds = limitGestureToBounds
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: view, action: #selector(view.handleLongPressGesture(_:)))
+        longPressGestureRecognizer.minimumPressDuration = 0.01
+        view.addGestureRecognizer(longPressGestureRecognizer)
         return view
     }
 
@@ -60,8 +63,8 @@ private struct TouchLocationView: UIViewRepresentable {
         var onLocationUpdate: ((CGPoint) -> Void)?
         var onEnded: (() -> Void)?
         var onCancelled: (() -> Void)?
-        var touchTypes: TouchLocationView.TouchType = .all
-
+        var limitGestureToBounds = true
+        
         override init(frame: CGRect) {
             super.init(frame: frame)
             isUserInteractionEnabled = true
@@ -71,45 +74,24 @@ private struct TouchLocationView: UIViewRepresentable {
             super.init(coder: coder)
             isUserInteractionEnabled = true
         }
-
-        override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-            guard let touch = touches.first else { return }
-            let location = touch.location(in: self)
-            determineAction(with: location, forEvent: .started)
-        }
-
-        override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-            guard let touch = touches.first else { return }
-            let location = touch.location(in: self)
-            determineAction(with: location, forEvent: .ended)
-        }
-
-        override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-            guard let touch = touches.first else { return }
-            let location = touch.location(in: self)
-            determineAction(with: location, forEvent: .cancelled)
-        }
-
-        private func determineAction(with location: CGPoint, forEvent event: TouchType) {
-            guard touchTypes.contains(event) else { return }
+        
+        @objc dynamic func handleLongPressGesture(_ recognizer: UILongPressGestureRecognizer) {
+            let location = recognizer.location(in: self)
             onLocationUpdate?(location)
-            switch event {
-            case .started: onStarted?()
+            switch recognizer.state {
+            case .began: onStarted?()
+            case .changed: checkBounds(location: location, recognizer: recognizer)
             case .ended: onEnded?()
             case .cancelled: onCancelled?()
-            default: do { }
+            default: do {}
+            }
+        }
+        
+        private func checkBounds(location: CGPoint,  recognizer: UIGestureRecognizer) {
+            if limitGestureToBounds && !bounds.contains(location) {
+                recognizer.state = .cancelled
             }
         }
 
     }
-
-    struct TouchType: OptionSet {
-        static let started = TouchType(rawValue: 1)
-        static let ended = TouchType(rawValue: 2)
-        static let cancelled = TouchType(rawValue: 3)
-        static let all: TouchType = [.started, .ended, .cancelled]
-
-        let rawValue: Int
-    }
-
 }
