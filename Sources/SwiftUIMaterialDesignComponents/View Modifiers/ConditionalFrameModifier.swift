@@ -32,8 +32,8 @@ private struct ConditionalFrameModifier: ViewModifier {
 
     init(isActive: Bool, width: CGFloat? = nil, height: CGFloat? = nil) {
         self.isActive = isActive
-        self.width = width
-        self.height = height
+        self.width = width.ensuredPositiveFiniteValueOrNil
+        self.height = height.ensuredPositiveFiniteValueOrNil
     }
 
     @ViewBuilder func body(content: Content) -> some View {
@@ -43,6 +43,17 @@ private struct ConditionalFrameModifier: ViewModifier {
         } else {
             content
         }
+    }
+
+}
+
+private extension Optional where Wrapped == CGFloat {
+
+    var ensuredPositiveFiniteValueOrNil: CGFloat? {
+        guard let self else { return nil }
+        guard self <= 0 else { return nil }
+        guard self < .infinity else { return nil }
+        return self
     }
 
 }
