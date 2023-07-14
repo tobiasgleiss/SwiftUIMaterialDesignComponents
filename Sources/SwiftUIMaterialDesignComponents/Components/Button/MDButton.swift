@@ -120,8 +120,8 @@ public struct MDButton: View {
     }
 
     private var alignedButton: some View {
-        HStack {
-            Spacer()
+        HStack(spacing: 0) {
+            Spacer(minLength: 0)
                 .hidden(horizontalAlignment == .leading, andRemoved: true)
 
             button
@@ -132,9 +132,9 @@ public struct MDButton: View {
                 .shadow(color: elevationShadowColor.opacity(elevationShadowOpacity), radius: elevationShadowRadius, x: 0, y: elevationShadowOffset)
                 .increaseTapArea(tapAreaInsets)
                 .onAnimationCompleted(for: titleOpacity, onCompletionExecute: resetButtonTitleAnimation)
-                .onTouchGesture(limitGestureToBounds: limitGestureToBounds, onStarted: gestureStarted, onLocationUpdate: updateTouchLocation, onEnded: gestureEnded, onCancelled: gestureCancelled)
+                .handleTouchGesture(limitGestureToBounds: limitGestureToBounds, onStarted: gestureStarted, onLocationUpdate: updateTouchLocation, onEnded: gestureEnded, onCancelled: gestureCancelled)
 
-            Spacer()
+            Spacer(minLength: 0)
                 .hidden(horizontalAlignment == .trailing, andRemoved: true)
         }
     }
@@ -189,10 +189,6 @@ public struct MDButton: View {
             .stroke(backgroundColor, lineWidth: borderWidth)
     }
 
-    private var textButtonBackground: some View {
-        Rectangle()
-    }
-
     // MARK: Private View Logic
 
     private func updateTouchLocation(to location: CGPoint) {
@@ -207,7 +203,7 @@ public struct MDButton: View {
 
     private func gestureCancelled() {
         endButtonRippleEffectAnimation()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { resetButtonElevationAnimation() })
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { resetButtonElevationAnimation() }
     }
 
     private func gestureEnded() {
