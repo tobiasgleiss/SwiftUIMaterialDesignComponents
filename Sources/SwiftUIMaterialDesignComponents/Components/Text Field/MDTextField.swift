@@ -166,8 +166,7 @@ public struct MDTextField: View {
                 .onTapGesture(perform: focusTextField)
 
             errorMessageView
-                .padding(.horizontal, horizontalPadding)
-                .hidden(!isErrorMessageSet, andRemoved: true)
+                .conditionalPadding(.horizontal, horizontalPadding, if: isErrorMessageSet, otherwiseHidden: true)
         }
     }
 
@@ -267,7 +266,7 @@ public struct MDTextField: View {
                 .onTapGesture(perform: toggleContentSecurity)
         } else {
             icon?
-                .resizable() // FIXME: We have to be able to secure the field again!
+                .resizable()
         }
     }
 
@@ -498,7 +497,7 @@ private extension MDTextField {
         @Binding var isFocused: Bool
         @Binding var isContentSecured: Bool
         @Binding var text: String
-        
+
         var onCommit: () -> Void
 
         public var body: some View {

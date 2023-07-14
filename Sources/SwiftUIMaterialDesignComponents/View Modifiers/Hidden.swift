@@ -1,5 +1,5 @@
 //
-// 📄 HiddenModifier.swift
+// 📄 Hidden.swift
 // 👨🏼‍💻 Author: Tobias Gleiss
 //
 

@@ -5,8 +5,6 @@
 
 import SwiftUI
 
-// TODO: Sind hier wirklich alle 3 View Modifier nützlich?
-
 public extension View {
 
     /// Increases the tap area around a MDButton. This is especially helpful on horizontally aligned text only buttons.
