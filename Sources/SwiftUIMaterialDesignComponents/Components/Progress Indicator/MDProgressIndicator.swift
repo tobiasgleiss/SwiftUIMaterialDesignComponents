@@ -68,7 +68,8 @@ public struct MDProgressIndicator: View {
     private var progressBar: some View {
         Rectangle()
             .foregroundColor(progressBarColor)
-            .frame(width: progress, height: 4)
+            .frame(maxWidth: progress)
+            .frame(height: 4)
             .animation(progressAnimation)
     }
 
