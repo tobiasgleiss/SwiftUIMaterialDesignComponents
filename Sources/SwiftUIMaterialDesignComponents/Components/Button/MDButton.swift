@@ -38,11 +38,12 @@ public struct MDButton: View {
     let width: CGFloat
     let height: CGFloat
     let cornerRadius: CGFloat
-    let horizontalAlignment: HorizontalAlignment
+    let horizontalAlignment: HorizontalAlignment?
     let rippleEffectColor: Color
     let pendingIndicatorColor: Color
     let elevationShadowColor: Color
     let isRippleEffectEnabled: Bool
+    let isPaddedButton: Bool
     let isAlignedTextButton: Bool
     let isButtonShapeRemoved: Bool
 
@@ -101,12 +102,13 @@ public struct MDButton: View {
         self.action = action
         self.touchLocation = CGPoint(x: height / 2, y: width / 2)
         self.cornerRadius = style.cornerRadius
-        self.horizontalAlignment = style.textAlignment
+        self.horizontalAlignment = style.buttonAlignment
         self.borderWidth = style.borderWidth
         self.rippleEffectColor = style.rippleEffectColor.primary
         self.pendingIndicatorColor = style.activityIndicatorColor
         self.elevationShadowColor = style.shadowColor
-        self.isAlignedTextButton = style.isTextOnly && style.textAlignment != .center
+        self.isPaddedButton = style.buttonAlignment != nil
+        self.isAlignedTextButton = style.isTextOnly && isPaddedButton && style.buttonAlignment != .center
         self.dragArea = CGRect(x: 0, y: 0, width: width, height: height)
         self.limitGestureToBounds = limitGestureToBounds
         self.isButtonShapeRemoved = !isRippleEffectEnabled || isAlignedTextButton
@@ -114,7 +116,7 @@ public struct MDButton: View {
 
     public var body: some View {
         alignedButton
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: isPaddedButton ? .infinity : nil)
             .onChange(of: isPending, perform: pendingStateChanged)
             .onAppear(perform: setInitialPendingState)
     }
@@ -122,7 +124,7 @@ public struct MDButton: View {
     private var alignedButton: some View {
         HStack(spacing: 0) {
             Spacer(minLength: 0)
-                .hidden(horizontalAlignment == .leading, andRemoved: true)
+                .hidden(horizontalAlignment == .leading || !isPaddedButton, andRemoved: true)
 
             button
                 .contentShape(Rectangle())
@@ -135,7 +137,7 @@ public struct MDButton: View {
                 .handleTouchGesture(limitGestureToBounds: limitGestureToBounds, onStarted: gestureStarted, onLocationUpdate: updateTouchLocation, onEnded: gestureEnded, onCancelled: gestureCancelled)
 
             Spacer(minLength: 0)
-                .hidden(horizontalAlignment == .trailing, andRemoved: true)
+                .hidden(horizontalAlignment == .trailing || !isPaddedButton, andRemoved: true)
         }
     }
 
@@ -155,6 +157,7 @@ public struct MDButton: View {
         case .contained: containedButtonBackground
         case .outlined: outlinedButtonBackground
         case .textOnly: EmptyView()
+        case .bannerAction: EmptyView()
         }
     }
 

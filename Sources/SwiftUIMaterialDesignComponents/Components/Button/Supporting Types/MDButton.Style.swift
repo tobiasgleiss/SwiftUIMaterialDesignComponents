@@ -25,12 +25,13 @@ public extension MDButton {
             case contained
             case outlined
             case textOnly
+            case bannerAction
         }
 
         let baseType: BaseType
         let buttonColor: ColorPair
         let textColor: ColorPair
-        let textAlignment: HorizontalAlignment
+        let buttonAlignment: HorizontalAlignment?
         let font: Font
         let borderWidth: CGFloat
         let cornerRadius: CGFloat
@@ -39,11 +40,11 @@ public extension MDButton {
         let shadowColor: Color
         let elevation: CGFloat
 
-        private init(baseType: BaseType, buttonColor: ColorPair, textColor: ColorPair, textAlignment: HorizontalAlignment = .center, font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5) {
+        private init(baseType: BaseType, buttonColor: ColorPair, textColor: ColorPair, buttonAlignment: HorizontalAlignment? = .center, font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5) {
             self.baseType = baseType
             self.buttonColor = buttonColor
             self.textColor = textColor
-            self.textAlignment = textAlignment
+            self.buttonAlignment = buttonAlignment
             self.font = font
             self.borderWidth = borderWidth
             self.cornerRadius = cornerRadius
@@ -54,18 +55,23 @@ public extension MDButton {
         }
 
         public static let contained = contained()
-        public static func contained(buttonColor: ColorPair = .defaultMaterialAccent, textColor: ColorPair = .defaultMaterialForeground, textAlignment: HorizontalAlignment = .center, font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5) -> Style {
-            Style(baseType: .contained, buttonColor: buttonColor, textColor: textColor, textAlignment: textAlignment, font: font, borderWidth: borderWidth, cornerRadius: cornerRadius)
+        public static func contained(buttonColor: ColorPair = .defaultMaterialAccent, textColor: ColorPair = .defaultMaterialForeground, buttonAlignment: HorizontalAlignment = .center, font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5) -> Style {
+            Style(baseType: .contained, buttonColor: buttonColor, textColor: textColor, buttonAlignment: buttonAlignment, font: font, borderWidth: borderWidth, cornerRadius: cornerRadius)
         }
 
         public static let outlined = outlined()
-        public static func outlined(buttonColor: ColorPair = .defaultMaterialAccent, textColor: ColorPair = .defaultMaterialAccent, textAlignment: HorizontalAlignment = .center, font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5) -> Style {
-            Style(baseType: .outlined, buttonColor: buttonColor, textColor: textColor, textAlignment: textAlignment, font: font, borderWidth: borderWidth, cornerRadius: cornerRadius)
+        public static func outlined(buttonColor: ColorPair = .defaultMaterialAccent, textColor: ColorPair = .defaultMaterialAccent, buttonAlignment: HorizontalAlignment = .center, font: Font = .subheadline, borderWidth: CGFloat = 2, cornerRadius: CGFloat = 5) -> Style {
+            Style(baseType: .outlined, buttonColor: buttonColor, textColor: textColor, buttonAlignment: buttonAlignment, font: font, borderWidth: borderWidth, cornerRadius: cornerRadius)
         }
 
         public static let textOnly = textOnly()
-        public static func textOnly(buttonColor: ColorPair = .defaultMaterialAccent, textColor: ColorPair = .defaultMaterialAccent, textAlignment: HorizontalAlignment = .center, font: Font = .subheadline, borderWidth: CGFloat = 0, cornerRadius: CGFloat = 5) -> Style {
-            Style(baseType: .textOnly, buttonColor: buttonColor, textColor: textColor, textAlignment: textAlignment, font: font, borderWidth: borderWidth, cornerRadius: cornerRadius)
+        public static func textOnly(buttonColor: ColorPair = .defaultMaterialAccent, textColor: ColorPair = .defaultMaterialAccent, buttonAlignment: HorizontalAlignment = .center, font: Font = .subheadline, borderWidth: CGFloat = 0, cornerRadius: CGFloat = 5) -> Style {
+            Style(baseType: .textOnly, buttonColor: buttonColor, textColor: textColor, buttonAlignment: buttonAlignment, font: font, borderWidth: borderWidth, cornerRadius: cornerRadius)
+        }
+
+        internal static let bannerAction = bannerAction()
+        internal static func bannerAction(textColor: ColorPair = .defaultMaterialAccent, font: Font = .subheadline) -> Style {
+            Style(baseType: .bannerAction, buttonColor: .defaultMaterialAccent, textColor: textColor, buttonAlignment: nil, font: font, borderWidth: 0, cornerRadius: 5)
         }
 
         internal var isTextOnly: Bool {

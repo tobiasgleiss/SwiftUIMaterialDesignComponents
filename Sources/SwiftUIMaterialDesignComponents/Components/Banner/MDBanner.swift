@@ -66,8 +66,8 @@ public struct MDBanner: View {
 
             buttons
                 .frame(maxWidth: .infinity)
-                .conditionalPadding(.horizontal, buttonSpacing, if: hasButtons)
-                .conditionalPadding(.bottom, buttonSpacing, if: hasButtons, otherwiseHidden: true)
+                .conditionalPadding(.horizontal, horizontalPadding, if: hasButtons)
+                .conditionalPadding(.bottom, verticalSpacing, if: hasButtons, otherwiseHidden: true)
 
             bottomBorder
         }
@@ -86,10 +86,14 @@ public struct MDBanner: View {
     }
 
     private var buttons: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: buttonSpacing) {
             Spacer(minLength: 0)
+
             leadingButton
+                .hidden(leadingButton == nil, andRemoved: true)
+
             trailingButton
+                .hidden(trailingButton == nil, andRemoved: true)
         }
     }
 
