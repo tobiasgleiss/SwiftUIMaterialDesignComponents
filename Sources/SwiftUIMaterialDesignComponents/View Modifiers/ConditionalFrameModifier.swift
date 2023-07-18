@@ -51,7 +51,7 @@ private extension Optional where Wrapped == CGFloat {
 
     var ensuredPositiveFiniteValueOrNil: CGFloat? {
         guard let self else { return nil }
-        guard self <= 0 else { return nil }
+        guard self >= 0 else { return nil }
         guard self < .infinity else { return nil }
         return self
     }
