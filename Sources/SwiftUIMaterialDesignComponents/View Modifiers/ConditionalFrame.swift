@@ -1,5 +1,5 @@
 //
-// 📄 ConditionalFrameModifier.swift
+// 📄 ConditionalFrame.swift
 // 👨🏼‍💻 Author: Tobias Gleiss
 //
 

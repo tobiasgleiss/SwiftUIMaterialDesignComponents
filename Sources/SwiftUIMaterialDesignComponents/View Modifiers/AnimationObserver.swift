@@ -1,5 +1,5 @@
 //
-// 📄 AnimationObserverModifier.swift
+// 📄 AnimationObserver.swift
 // 👨🏼‍💻 Author: Tobias Gleiss
 //
 

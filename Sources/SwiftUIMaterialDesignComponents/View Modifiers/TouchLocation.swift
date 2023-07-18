@@ -1,14 +1,14 @@
 //
-// 📄 TouchLocationModifier.swift
+// 📄 TouchLocation.swift
 // 👨🏼‍💻 Author: Tobias Gleiss
 //
 
 import SwiftUI
 
-extension View {
+public extension View {
 
     /// Provides a Touch Gesture with options to execute actions on start, end or on cancel of the gesture.
-    @discardableResult func onTouchGesture(limitGestureToBounds: Bool, onStarted: @escaping () -> Void, onLocationUpdate: @escaping (CGPoint) -> Void, onEnded: @escaping () -> Void, onCancelled: @escaping () -> Void) -> some View {
+    @discardableResult func handleTouchGesture(limitGestureToBounds: Bool = true, onStarted: @escaping () -> Void = { }, onLocationUpdate: @escaping (CGPoint) -> Void = { _ in }, onEnded: @escaping () -> Void = { }, onCancelled: @escaping () -> Void = { }) -> some View {
         modifier(TouchLocationModifier(limitGestureToBounds: limitGestureToBounds, onStarted: onStarted, onLocationUpdate: onLocationUpdate, onEnded: onEnded, onCancelled: onCancelled))
     }
 
@@ -64,7 +64,7 @@ private struct TouchLocationView: UIViewRepresentable {
         var onEnded: (() -> Void)?
         var onCancelled: (() -> Void)?
         var limitGestureToBounds = true
-        
+
         override init(frame: CGRect) {
             super.init(frame: frame)
             isUserInteractionEnabled = true
@@ -74,7 +74,7 @@ private struct TouchLocationView: UIViewRepresentable {
             super.init(coder: coder)
             isUserInteractionEnabled = true
         }
-        
+
         @objc dynamic func handleLongPressGesture(_ recognizer: UILongPressGestureRecognizer) {
             let location = recognizer.location(in: self)
             onLocationUpdate?(location)
@@ -83,15 +83,16 @@ private struct TouchLocationView: UIViewRepresentable {
             case .changed: checkBounds(location: location, recognizer: recognizer)
             case .ended: onEnded?()
             case .cancelled: onCancelled?()
-            default: do {}
+            default: do { }
             }
         }
-        
-        private func checkBounds(location: CGPoint,  recognizer: UIGestureRecognizer) {
-            if limitGestureToBounds && !bounds.contains(location) {
+
+        private func checkBounds(location: CGPoint, recognizer: UIGestureRecognizer) {
+            if limitGestureToBounds, !bounds.contains(location) {
                 recognizer.state = .cancelled
             }
         }
 
     }
+
 }
