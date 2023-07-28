@@ -20,12 +20,12 @@ extension View {
 
 private struct AccessibilityDescriptionModifier: ViewModifier {
 
-    private let label: (any StringProtocol)?
-    private let hint: (any StringProtocol)?
+    private let label: String?
+    private let hint: String?
 
     init(_ label: (any StringProtocol)?, hint: (any StringProtocol)?) {
-        self.label = label
-        self.hint = hint
+        self.label = label?.replacedWithNilIfEmpty
+        self.hint = hint?.replacedWithNilIfEmpty
     }
 
     func body(content: Content) -> some View {
