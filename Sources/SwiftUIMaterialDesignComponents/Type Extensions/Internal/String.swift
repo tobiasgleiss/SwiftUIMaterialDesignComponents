@@ -20,3 +20,12 @@ extension String {
     }
 
 }
+
+extension StringProtocol {
+
+    /// Returns nil if empty
+    var replacedWithNilIfEmpty: String? {
+        isEmpty ? nil : String(self)
+    }
+
+}

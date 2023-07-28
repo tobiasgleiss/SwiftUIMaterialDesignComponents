@@ -26,7 +26,7 @@ public struct MDButton: View {
     @State private var titleOpacity: CGFloat = 1
 
     @Binding private var accessibilityLabel: String
-    @Binding private var accessibilityHint: String?
+    @Binding private var accessibilityHint: String
 
     // Animations
     let rippleEffectScalingAnimation: Animation = .easeIn(duration: 0.3)
@@ -94,7 +94,7 @@ public struct MDButton: View {
     ///     }
     ///
     /// - Attention: If the style is set to `.text` and it´s property `horizontalAlignment` is set to `.leading` or `.trailing` the ripple effect will automatically be disabled as well as the button shape. Only a centered text button has the ability to have a RippleEffect.
-    public init(title: String, style: Style = .contained, icon: Icon? = nil, width: CGFloat = defaultWidth, height: CGFloat = defaultHeight, isRippleEffectEnabled: Bool = true, limitGestureToBounds: Bool = true, accessibilityLabel: Binding<String>? = nil, accessibilityHint: Binding<String?> = .constant(nil), action: @escaping () -> Void = { }) {
+    public init(title: String, style: Style = .contained, icon: Icon? = nil, width: CGFloat = defaultWidth, height: CGFloat = defaultHeight, isRippleEffectEnabled: Bool = true, limitGestureToBounds: Bool = true, accessibilityLabel: Binding<String>? = nil, accessibilityHint: Binding<String>? = nil, action: @escaping () -> Void = { }) {
         self.title = title
         self.style = style
         self.leadingIcon = icon?.position == .leading ? icon : nil
@@ -103,7 +103,7 @@ public struct MDButton: View {
         self.height = height
         self.isRippleEffectEnabled = isRippleEffectEnabled
         self._accessibilityLabel = accessibilityLabel ?? .constant(title)
-        self._accessibilityHint = accessibilityHint
+        self._accessibilityHint = accessibilityHint ?? .constant("")
         self.action = action
         self.touchLocation = CGPoint(x: height / 2, y: width / 2)
         self.cornerRadius = style.cornerRadius
