@@ -36,6 +36,8 @@ public struct MDTextField: View {
     private let defaultOffset: CGFloat
     private let placeholderOffsetUnfocusedState = CGSize()
     private let sequence: Sequence?
+    private let secureTextFieldIconAccessibilityLabel: String?
+    private let secureTextFieldIconAccessibilityHint: String?
 
     // Computed Properties
     private var isErrorMessageSet: Bool { !errorMessage.isEmpty }
@@ -103,13 +105,15 @@ public struct MDTextField: View {
     ///
     ///     }
     ///
-    public init(placeholder: String, style: Style = .filled, value: Binding<String>, icon: Image? = nil, securedIcon: (securedContent: Image, unsecuredContent: Image)? = (Image(systemName: "eye.slash.fill"), Image(systemName: "eye.fill")), iconColor: Color? = nil, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = { }, sequence: Sequence? = nil) {
+    public init(placeholder: String, style: Style = .filled, value: Binding<String>, icon: Image? = nil, securedIcon: (securedContent: Image, unsecuredContent: Image)? = (Image(systemName: "eye.slash.fill"), Image(systemName: "eye.fill")), secureTextFieldIconAccessibilityLabel: String? = nil, secureTextFieldIconAccessibilityHint: String? = nil, iconColor: Color? = nil, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = { }, sequence: Sequence? = nil) {
         self.placeholderText = placeholder
         self.style = style
         self._text = value
         self.onEditingChanged = onEditingChanged
         self.onCommit = onCommit
         self.sequence = sequence
+        self.secureTextFieldIconAccessibilityLabel = secureTextFieldIconAccessibilityLabel
+        self.secureTextFieldIconAccessibilityHint = secureTextFieldIconAccessibilityHint
         self.focusedColor = style.focusedColor
         self.textColor = style.textColor
         self.textColorDisabled = style.textColorDisabled
@@ -204,6 +208,8 @@ public struct MDTextField: View {
         HStack {
             textFieldContainer
                 .frame(height: textFieldHeight)
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel(placeholderText)
 
             Spacer()
 
@@ -229,6 +235,7 @@ public struct MDTextField: View {
                 .background(placeholderBackground)
                 .frame(height: placeholderFontSize)
                 .offset(placeholderOffset)
+                .accessibilityHidden(true)
 
             textFieldView
                 .font(.system(size: textFontSize))
@@ -264,9 +271,14 @@ public struct MDTextField: View {
             secureIconView?
                 .resizable()
                 .onTapGesture(perform: toggleContentSecurity)
+                .accessibilityElement()
+                .accessibilityDescription(secureTextFieldIconAccessibilityLabel, hint: secureTextFieldIconAccessibilityHint)
+                .accessibilityAction(named: secureTextFieldIconAccessibilityLabel ?? "", toggleContentSecurity)
+                .accessibilityAddTraits(.isButton)
         } else {
             icon?
                 .resizable()
+                .accessibilityHidden(true)
         }
     }
 
@@ -410,8 +422,16 @@ public struct MDTextField: View {
     }
 
     private func toggleContentSecurity() {
-        if isFocused { canChangeFocus = false }
-        isContentSecured.toggle()
+        if UIAccessibility.isVoiceOverRunning {
+            // Without the slight delay it won't be read 🤷🏼‍♂️
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                let spelledOutContent = NSAttributedString(string: text, attributes: [.accessibilitySpeechSpellOut: true])
+                UIAccessibility.post(notification: .announcement, argument: spelledOutContent)
+            }
+        } else {
+            if isFocused { canChangeFocus = false }
+            isContentSecured.toggle()
+        }
     }
 
 }

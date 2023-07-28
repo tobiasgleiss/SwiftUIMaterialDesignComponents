@@ -8,11 +8,11 @@ import SwiftUI
 
 extension View {
 
-    /// Adds a label and an optional hint to the view that describes its contents.
+    /// Adds an optional label and an optional hint to the view that describes its contents.
     /// - Parameters:
     ///   - label: A string that succinctly identifies the accessibility element.
     ///   - hint: A string that briefly describes the result of performing an action on the accessibility element.
-    @discardableResult func accessibilityDescription(_ label: any StringProtocol, hint: (any StringProtocol)? = nil) -> some View {
+    @discardableResult func accessibilityDescription(_ label: (any StringProtocol)?, hint: (any StringProtocol)? = nil) -> some View {
         modifier(AccessibilityDescriptionModifier(label, hint: hint))
     }
 
@@ -20,22 +20,27 @@ extension View {
 
 private struct AccessibilityDescriptionModifier: ViewModifier {
 
-    private let label: any StringProtocol
+    private let label: (any StringProtocol)?
     private let hint: (any StringProtocol)?
 
-    init(_ label: any StringProtocol, hint: (any StringProtocol)?) {
+    init(_ label: (any StringProtocol)?, hint: (any StringProtocol)?) {
         self.label = label
         self.hint = hint
     }
 
     func body(content: Content) -> some View {
-        if let hint {
+        if let label, let hint {
             content
                 .accessibilityLabel(label)
                 .accessibilityHint(hint)
-        } else {
+        } else if let label {
             content
                 .accessibilityLabel(label)
+        } else if let hint {
+            content
+                .accessibilityHint(hint)
+        } else {
+            content
         }
     }
 
