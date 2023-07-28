@@ -48,6 +48,7 @@ private struct HiddenModifier: ViewModifier {
                 } else {
                     content
                         .hidden()
+                        .accessibilityHidden(true)
                 }
             } else {
                 content
