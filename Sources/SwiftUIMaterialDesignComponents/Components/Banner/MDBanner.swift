@@ -70,6 +70,7 @@ public struct MDBanner: View {
                 .conditionalPadding(.bottom, verticalSpacing, if: hasButtons, otherwiseHidden: true)
 
             bottomBorder
+                .accessibilityHidden(true)
         }
     }
 
@@ -77,6 +78,7 @@ public struct MDBanner: View {
         HStack(spacing: 0) {
             icon
                 .padding(.trailing, horizontalPadding)
+                .accessibilityHidden(true)
 
             Text(message)
                 .font(messageFont)
