@@ -51,6 +51,7 @@ public struct MDRippleEffect: View {
             .clipped()
             .onChange(of: isPressed, perform: pressedStateChanged)
             .onAnimationCompleted(for: opacity, onCompletionExecute: markAnimationCompleted)
+            .accessibilityHidden(true)
     }
 
     private func pressedStateChanged(to isPressed: Bool) {
