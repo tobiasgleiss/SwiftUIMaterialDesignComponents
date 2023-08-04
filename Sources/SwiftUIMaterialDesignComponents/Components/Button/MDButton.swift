@@ -7,7 +7,6 @@ import SwiftUI
 
 public struct MDButton: View {
 
-    @Environment(\.isButtonPending) private var isPending: Bool
     @Environment(\.isEnabled) private var isEnabled: Bool
     @Environment(\.buttonTapAreaInsets) private var tapAreaInsets: EdgeInsets
 
@@ -25,6 +24,7 @@ public struct MDButton: View {
     @State private var elevationShadowOpacity: CGFloat = 0
     @State private var titleOpacity: CGFloat = 1
 
+    @Binding private var isPending: Bool
     @Binding private var accessibilityLabel: String
     @Binding private var accessibilityHint: String
 
@@ -71,6 +71,9 @@ public struct MDButton: View {
     ///   - height: The height of the button
     ///   - isRippleEffectEnabled: Indicates if the RippleEffect should be enabled
     ///   - limitGestureToBounds: Indicates if the gesture should be cancelled if a drag gesture exceeds the bounds of the button
+    ///   - isPending: A binding for the pending indicator
+    ///   - accessibilityLabel: The dynamic Accessibility Label of the button
+    ///   - accessibilityHint: The dynamic Accessibility Label of the button
     ///   - action: The action that is executed when the user taps the button
     ///
     /// If the button is followed by a `pending` view modifier, it will be overlayed with an Activity Indicator replacing the title and icon for as long as it is in pending state. A typical use case would look like this:
@@ -94,7 +97,7 @@ public struct MDButton: View {
     ///     }
     ///
     /// - Attention: If the style is set to `.text` and it´s property `horizontalAlignment` is set to `.leading` or `.trailing` the ripple effect will automatically be disabled as well as the button shape. Only a centered text button has the ability to have a RippleEffect.
-    public init(title: String, style: Style = .contained, icon: Icon? = nil, width: CGFloat = defaultWidth, height: CGFloat = defaultHeight, isRippleEffectEnabled: Bool = true, limitGestureToBounds: Bool = true, accessibilityLabel: Binding<String>? = nil, accessibilityHint: Binding<String>? = nil, action: @escaping () -> Void = { }) {
+    public init(title: String, style: Style = .contained, icon: Icon? = nil, width: CGFloat = defaultWidth, height: CGFloat = defaultHeight, isRippleEffectEnabled: Bool = true, limitGestureToBounds: Bool = true, isPending: Binding<Bool> = .constant(false), accessibilityLabel: Binding<String>? = nil, accessibilityHint: Binding<String>? = nil, action: @escaping () -> Void = { }) {
         self.title = title
         self.style = style
         self.leadingIcon = icon?.position == .leading ? icon : nil
@@ -102,6 +105,7 @@ public struct MDButton: View {
         self.width = width
         self.height = height
         self.isRippleEffectEnabled = isRippleEffectEnabled
+        self._isPending = isPending
         self._accessibilityLabel = accessibilityLabel ?? .constant(title)
         self._accessibilityHint = accessibilityHint ?? .constant("")
         self.action = action
@@ -202,14 +206,14 @@ public struct MDButton: View {
 
     // MARK: Private View Logic
 
-    private func updateTouchLocation(to location: CGPoint) {
-        touchLocation = location
-    }
-
     private func gestureStarted() {
         startButtonRippleEffectAnimation()
         startButtonTitleTapAnimation()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { startButtonElevationAnimation() }
+    }
+
+    private func updateTouchLocation(to location: CGPoint) {
+        touchLocation = location
     }
 
     private func gestureCancelled() {
@@ -220,9 +224,14 @@ public struct MDButton: View {
     private func gestureEnded() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             endButtonRippleEffectAnimation()
-            action()
+            executeActionIfPossible()
             resetButtonElevationAnimation()
         }
+    }
+
+    private func executeActionIfPossible() {
+        guard !isPending else { return }
+        action()
     }
 
     /// Update the Pending Indicator when the button appears (used from the `.onAppear` modifier).
